@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  	<title>Find Music Events Around You, by genre!</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<script src="js/knockout.js"></script>
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCXZtFSTS35oIM_e8iL7uIOMm2G_23Rng"></script>
@@ -12,6 +14,13 @@
     <!--<link rel="stylesheet" href="css/style.css">-->
 </head>
 <body>
+	<div id="location-input">
+		<form>
+			<input type="text">
+			<input type="submit" value="GO!">
+			<p><span data-bind="text: inputValue"></span></p>
+		</form>
+	</div>
 	<div id="map-canvas"></div>
 
 	<script src="js/script.js"></script>
