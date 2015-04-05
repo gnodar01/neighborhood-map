@@ -15,11 +15,9 @@
 </head>
 <body>
 	<div id="location-input">
-		<form>
-			<input type="text">
-			<input type="submit" value="GO!">
-			<p><span data-bind="text: inputValue"></span></p>
-		</form>
+			<input type="text" data-bind="value: inputVal">
+			<button data-bind="click: getData">GO!</button>
+			<p><span data-bind="text: inputVal"></span></p>
 	</div>
 	<div id="map-canvas"></div>
 
