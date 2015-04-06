@@ -1,18 +1,21 @@
-var runGet = function(data) {
+var logData = function(data) {
 	console.log(data);
+}
+var message = function() {
+	console.log(currentView.cityVal());
 }
 
 function MyViewModel() {
-	this.cityVal = ko.observable('');
-	this.customURL = ko.computed(function() {
-		return 'http://api.seatgeek.com/2/events?geoip=true&per_page=25&venue.city=' + this.cityVal();
-	}, this);
-	this.getData = function() {
+	this.cityVal = ko.observable();
+	/* When the button is clicked, the city that was
+	inputted is sent to the google maps geocoder to get the
+	lat & long coordinates, this makes searching the SeatGeek
+	more accurate than simply searching by city*/
+	this.runSearch = function() {
 		codeAddress(this.cityVal());
-		$.getJSON(this.customURL(), function (data) {
-			runGet(data);
-		});
 	}
 }
 
-ko.applyBindings(new MyViewModel());
+var currentView = new MyViewModel();
+
+ko.applyBindings(currentView);
