@@ -1,5 +1,5 @@
-var runGet = function() {
-	console.log("hello");
+var runGet = function(data) {
+	console.log(data);
 }
 
 function MyViewModel() {
@@ -8,8 +8,9 @@ function MyViewModel() {
 		return 'http://api.seatgeek.com/2/events?geoip=true&per_page=25&venue.city=' + this.cityVal();
 	}, this);
 	this.getData = function() {
+		codeAddress(this.cityVal());
 		$.getJSON(this.customURL(), function (data) {
-			console.log(data);
+			runGet(data);
 		});
 	}
 }
