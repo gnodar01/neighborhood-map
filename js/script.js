@@ -3,9 +3,12 @@ var runGet = function() {
 }
 
 function MyViewModel() {
-	this.inputVal = ko.observable();
+	this.cityVal = ko.observable('');
+	this.customURL = ko.computed(function() {
+		return 'http://api.seatgeek.com/2/events?geoip=true&per_page=25&venue.city=' + this.cityVal();
+	}, this);
 	this.getData = function() {
-		$.getJSON('http://api.seatgeek.com/2/events?geoip=true&per_page=25', function (data) {
+		$.getJSON(this.customURL(), function (data) {
 			console.log(data);
 		});
 	}
