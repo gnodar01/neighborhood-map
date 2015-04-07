@@ -12,7 +12,14 @@ function initialize() {
 
 // Runs the SeatGeek api, and returns a list of 25 events near the city the user inputted (after geocoding).
 searchSeatGeek = function(lat,lng) {
-	var customURL = 'http://api.seatgeek.com/2/events?per_page=25&lat=' +lat+ '&lon=' + lng;
+	var taxonomies = ['concert','music_festival','classical','classical_opera','classical_vocal','classical_orchestral_instrumental']
+	var taxonomySearchString = '&taxonomies.name=';
+	var fullTaxonomyQuery = "";
+	for (var i = 0; i < taxonomies.length; i++) {
+		var taxonomySearchQuery = taxonomySearchString + taxonomies[i];
+		fullTaxonomyQuery += taxonomySearchQuery;
+	}
+	var customURL = 'http://api.seatgeek.com/2/events?per_page=50' + fullTaxonomyQuery + '&lat=' +lat+ '&lon=' + lng;
 	$.getJSON(customURL, function (data) {
 		logData(data);
 	});

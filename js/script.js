@@ -1,5 +1,7 @@
 var logData = function(data) {
-	console.log(data);
+	for (var i = 0; i < data.events.length; i++) {
+		console.log(data.events[i].taxonomies[0].name);
+	}
 }
 var message = function() {
 	console.log(currentView.cityVal());
