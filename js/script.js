@@ -1,9 +1,12 @@
+/* Parse the data response from the API call, and form an array of event objects
+	with relevant data, which will be displayed on the google map.*/
 var logData = function(data) {
 	var numEvents = data.events.length;
 	var eventList = [];
 	for (var i = 0; i < numEvents; i++) {
 		var currentEvent = data.events[i], currentVenue = currentEvent.venue;
 		var eventListing = {};
+		
 		eventListing.eventTitle = currentEvent.title;
 		eventListing.eventDate = currentEvent.datetime_local;
 		eventListing.eventType = currentEvent.type;
@@ -27,10 +30,6 @@ var logData = function(data) {
 		eventList.push(eventListing);
 	}
 	console.log(eventList);
-}
-
-var message = function() {
-	console.log(currentView.cityVal());
 }
 
 function MyViewModel() {
