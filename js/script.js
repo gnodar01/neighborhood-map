@@ -27,10 +27,10 @@ var logData = function(data) {
 		eventListing.eventPerformers = [];
 		for (var j = 0; j < currentEvent.performers.length; j++) {
 			var performer = {};
-			performer.name = currentEvent.performers[j].name;
-			performer.imgURL = currentEvent.performers[j].image;
+			performer.performerName = currentEvent.performers[j].name;
+			performer.PerformerImgURL = currentEvent.performers[j].image;
 			// Each performer on SeatGeek's database has a unique ID, which among other things, can be used with the Echo Nest API
-			performer.sgID = currentEvent.performers[j].id;
+			performer.performerID = currentEvent.performers[j].id;
 			eventListing.eventPerformers.push(performer);
 		}
 
