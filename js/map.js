@@ -1,5 +1,4 @@
-var geocoder;
-var map;
+var geocoder, map;
 function initialize() {
   geocoder = new google.maps.Geocoder();
   var latlng = new google.maps.LatLng(28.4158, -81.2989);
@@ -16,10 +15,10 @@ searchSeatGeek = function(lat,lng) {
 	Only music related events are needed so it must be specified in the api call. The taxonomies array includes all music related taxonomies
 	that are returned by SeatGeek. Each taxonomy is looped through, with an added search query, and appended to the full query, which is then
 	appended to the full URL for the api call*/
-	var taxonomies = ['concert','music_festival','classical','classical_opera','classical_vocal','classical_orchestral_instrumental']
-	var taxonomySearchString = '&taxonomies.name=';
-	var fullTaxonomyQuery = "";
-	for (var i = 0; i < taxonomies.length; i++) {
+	var taxonomies = ['concert','music_festival','classical','classical_opera','classical_vocal','classical_orchestral_instrumental'],
+	taxonomySearchString = '&taxonomies.name=',
+	fullTaxonomyQuery = "";
+	for (var i = 0, taxLength = taxonomies.length; i < taxLength; i++) {
 		var taxonomySearchQuery = taxonomySearchString + taxonomies[i];
 		fullTaxonomyQuery += taxonomySearchQuery;
 	}
@@ -35,8 +34,8 @@ function codeAddress(city) {
   geocoder.geocode( { 'address': address}, function(results, status) {
     if (status == google.maps.GeocoderStatus.OK) {
       // Retrieve lat and long coordinates from Geocode results to pass into SeatGeeks api call
-      var newLat = results[0].geometry.location.k;
-      var newLng = results[0].geometry.location.D;
+      var newLat = results[0].geometry.location.k,
+      newLng = results[0].geometry.location.D;
       // Run SeatGeek api based on geocoded lat&lng coords
       searchSeatGeek(newLat,newLng);
 
