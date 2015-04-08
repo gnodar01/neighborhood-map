@@ -6,17 +6,31 @@ var logData = function(data) {
 	for (var i = 0; i < numEvents; i++) {
 		var currentEvent = data.events[i], currentVenue = currentEvent.venue;
 		var eventListing = {};
-		
+
 		eventListing.eventTitle = currentEvent.title;
-		eventListing.eventDate = currentEvent.datetime_local;
 		eventListing.eventType = currentEvent.type;
 		eventListing.eventURL = currentEvent.url;
+
+		/* If the event date is flagged true by SeatGeek, then the show date is an estimate;
+			if the event time is flagged true by SeatGeek, then the show date is correct, but the time
+			is set to 3:30 a.m. */
+		if (currentEvent.date_tbd) {
+			eventListing.eventDateEstimate = currentEvent.datetime_local;
+		}
+		else if (currentEvent.time_tbd) {
+			eventListing.eventTimeEstimate = currentEvent.datetime_local;
+		}
+		else {
+			eventListing.eventDate = currentEvent.datetime_local;
+		}
 		
 		eventListing.eventPerformers = [];
 		for (var j = 0; j < currentEvent.performers.length; j++) {
 			var performer = {};
 			performer.name = currentEvent.performers[j].name;
 			performer.imgURL = currentEvent.performers[j].image;
+			// Each performer on SeatGeek's database has a unique ID, which among other things, can be used with the Echo Nest API
+			performer.sgID = currentEvent.performers[j].id;
 			eventListing.eventPerformers.push(performer);
 		}
 
