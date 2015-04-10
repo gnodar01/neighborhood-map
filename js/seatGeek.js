@@ -57,10 +57,30 @@ var parseSGResults = function(data) {
 			name: currentVenue.name,
 			address: currentVenue.address + ", " + currentVenue.display_location + ", " + currentVenue.postal_code,
 			lat: currentVenue.location.lat,
-			lon: currentVenue.location.lon
+			lng: currentVenue.location.lon
 		}
 
 		eventList.push(eventListing);
 	}
 	console.log(eventList);
+	mapSGResults(eventList);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

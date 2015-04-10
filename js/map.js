@@ -16,8 +16,7 @@ function codeAddress(city) {
   geocoder.geocode( { 'address': address}, function(results, status) {
     if (status == google.maps.GeocoderStatus.OK) {
       // Retrieve lat and long coordinates from Geocode results to pass into SeatGeeks api call
-      var newLat = results[0].geometry.location.k,
-      newLng = results[0].geometry.location.D;
+      var newLat = results[0].geometry.location.k, newLng = results[0].geometry.location.D;
       // Run SeatGeek api based on geocoded lat&lng coords
       searchSeatGeek(newLat,newLng);
 
@@ -30,12 +29,27 @@ function codeAddress(city) {
       map.setCenter(results[0].geometry.location);
       var marker = new google.maps.Marker({
           map: map,
-          position: results[0].geometry.location
+          position: results[0].geometry.location,
+          icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
       });
     } else {
       alert('Geocode was not successful for the following reason: ' + status);
     }
   });
+}
+
+var mapSGResults = function(eventData) {
+	var eventMarker;
+	for (var i = 0, eventDataLen = eventData.length; i < eventDataLen; i++) {
+		var eventLat = eventData[i].eventVenue.lat, eventLng = eventData[i].eventVenue.lng,
+		eventLatLng = new google.maps.LatLng(eventLat, eventLng);
+
+		marker = new google.maps.Marker({
+			map: map,
+			position: eventLatLng,
+			icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+		});
+	}
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
