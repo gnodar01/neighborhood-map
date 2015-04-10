@@ -1,3 +1,4 @@
+// Initialize Google map, and geocoder.
 var geocoder, map;
 function initialize() {
   geocoder = new google.maps.Geocoder();
@@ -7,25 +8,6 @@ function initialize() {
     center: latlng
   }
   map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-}
-
-// Runs the SeatGeek api, and returns a list of 25 events near the city the user inputted (after geocoding).
-searchSeatGeek = function(lat,lng) {
-	/* SeatGeeks api has a list of taxonomies you can search through. These are event types like races, dance events, plays, concerts, etc.
-	Only music related events are needed so it must be specified in the api call. The taxonomies array includes all music related taxonomies
-	that are returned by SeatGeek. Each taxonomy is looped through, with an added search query, and appended to the full query, which is then
-	appended to the full URL for the api call*/
-	var taxonomies = ['concert','music_festival','classical','classical_opera','classical_vocal','classical_orchestral_instrumental'],
-	taxonomySearchString = '&taxonomies.name=',
-	fullTaxonomyQuery = "";
-	for (var i = 0, taxLength = taxonomies.length; i < taxLength; i++) {
-		var taxonomySearchQuery = taxonomySearchString + taxonomies[i];
-		fullTaxonomyQuery += taxonomySearchQuery;
-	}
-	var customURL = 'http://api.seatgeek.com/2/events?per_page=50' + fullTaxonomyQuery + '&lat=' +lat+ '&lon=' + lng;
-	$.getJSON(customURL, function (data) {
-		logData(data);
-	});
 }
 
 // Takes city, geocodes it, gets the lat & lng coords, sets a marker on that location in the map, and runs the search SeatGeek function on those coords.
