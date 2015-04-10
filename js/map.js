@@ -38,17 +38,37 @@ function codeAddress(city) {
   });
 }
 
+// Make marker and corresponding info window for each event location.
 var mapSGResults = function(eventData) {
-	var eventMarker;
+	var eventMarker, eventInfo, contentString, eventLat, eventLng, eventLatLng;
 	for (var i = 0, eventDataLen = eventData.length; i < eventDataLen; i++) {
-		var eventLat = eventData[i].eventVenue.lat, eventLng = eventData[i].eventVenue.lng,
+		
+		// HTML that provides markup for event information displayed in the google maps info window.
+		contentString = '<div id="content">' +
+		'<h1 id="content_header">' + '<a href=' + eventData[i].eventURL + '>' + eventData[i].eventTitle + '</a>' + '</h1>';
+
+		// New info window for each event, with it's correspoinding contentString.
+		eventInfo = new google.maps.InfoWindow({
+			content: contentString
+		});
+
+		eventLat = eventData[i].eventVenue.lat;
+		eventLng = eventData[i].eventVenue.lng;
+		// Construct a lat/long object using google maps LatLng class.
 		eventLatLng = new google.maps.LatLng(eventLat, eventLng);
 
-		marker = new google.maps.Marker({
+		// Place event marker on map with custom icon to differentiate it.
+		// Todo: create custom icon for each genre.
+		eventMarker = new google.maps.Marker({
 			map: map,
 			position: eventLatLng,
 			icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
 		});
+
+		// Event listner on each marker, that opens the corresponding info window.
+		google.maps.event.addListener(eventMarker, 'click', function() {
+    		eventInfo.open(map,eventMarker);
+  		});
 	}
 }
 
