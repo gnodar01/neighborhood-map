@@ -57,7 +57,7 @@ var mapSGResults = function(eventData) {
 			icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
 		});
 
-		// New info window for each event, with it's correspoinding contentString.
+		// New info window for each event marker, with it's correspoinding content string.
 		eventMarker.info = new google.maps.InfoWindow({
 			// HTML that provides markup for event information displayed in the google maps info window.
 			content: '<div id="content">' +
