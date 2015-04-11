@@ -63,7 +63,7 @@ var parseSGResults = function(data) {
 		eventList.push(eventListing);
 	}
 	console.log(eventList);
-	mapSGResults(eventList);
+	
 }
 
 
