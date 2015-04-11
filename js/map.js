@@ -38,6 +38,4 @@ function codeAddress(city) {
   });
 }
 
-
-
 google.maps.event.addDomListener(window, 'load', initialize);

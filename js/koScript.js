@@ -9,6 +9,4 @@ function MyViewModel() {
 	}
 }
 
-var currentView = new MyViewModel();
-
-ko.applyBindings(currentView);
+ko.applyBindings(new MyViewModel());
