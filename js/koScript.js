@@ -1,4 +1,6 @@
 function MyViewModel() {
+	var self = this;
+
 	this.cityVal = ko.observable();
 	/* When the button is clicked, the city that was
 	inputted is sent to the google maps geocoder to get the
@@ -7,8 +9,9 @@ function MyViewModel() {
 	this.runSearch = function() {
 		codeAddress(this.cityVal());
 	}
+	this.performers = ko.observableArray();
 }
 
-var currentView = new MyViewModel();
+var vm = new MyViewModel();
 
-ko.applyBindings(currentView);
+ko.applyBindings(vm);
