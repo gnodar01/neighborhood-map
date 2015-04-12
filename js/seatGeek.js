@@ -51,8 +51,6 @@ var parseSGResults = function(data) {
 			// Each performer on SeatGeek's database has a unique ID, which among other things, can be used with the Echo Nest API
 			performer.performerID = currentEvent.performers[j].id;
 			eventListing.eventPerformers.push(performer);
-			// Push each performer to the view model's observable array, so they appear in view.
-			vm.performers.push(performer);
 		}
 
 		eventListing.eventVenue = {
@@ -61,9 +59,15 @@ var parseSGResults = function(data) {
 			lat: currentVenue.location.lat,
 			lng: currentVenue.location.lon
 		}
+
 		eventList.push(eventListing);
 	}
+	console.log(eventList);
+	mapSGResults(eventList);
 }
+
+
+
 
 
 
