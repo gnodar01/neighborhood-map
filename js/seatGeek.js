@@ -63,6 +63,7 @@ var parseSGResults = function(data) {
 		}
 		eventList.push(eventListing);
 	}
+	// Place marker on each event's location with performer information.
 	mapSGResults(eventList);
 }
 

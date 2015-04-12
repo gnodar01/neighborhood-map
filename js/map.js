@@ -61,7 +61,7 @@ var mapSGResults = function(eventData) {
     eventMarker.info = new google.maps.InfoWindow({
       // HTML that provides markup for event information displayed in the google maps info window.
       content: '<div id="content">' +
-      '<h1 id="content_header">' + '<a href=' + eventData[i].eventURL + '>' + eventData[i].eventTitle + '</a>' + '</h1>'
+      '<h1 id="content_header">' + eventData[i].eventTitle + '</h1>'
     });
 
     // Event listner on each marker, that opens the corresponding info window.
