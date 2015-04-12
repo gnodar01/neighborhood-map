@@ -19,7 +19,9 @@
 	</div>
 	<div id="map-canvas"></div>
 	<div id="results">
-		<ul id="results-list"></ul>
+		<ul id="results-list" data-bind="foreach: performers">
+			<li data-bind="text: performerName"></li>
+		</ul>
 	</div>
 	<div id="performer-info"></div>
 
