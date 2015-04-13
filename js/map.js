@@ -64,6 +64,7 @@ var mapSGResults = function(eventData) {
       content: '<div id="content">' +
       '<h1 id="content_header">' + eventData[i].eventTitle + '</h1>'
     });
+    // Push to view model, so that the when a list item in the view is clicked, the corresponding info window will open.
     vm.markers().push(eventMarker);
 
     // Event listner on each marker, that opens the corresponding info window.

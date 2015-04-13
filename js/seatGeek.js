@@ -53,7 +53,7 @@ var parseSGResults = function(data) {
 			performer.performerIndex = i;
 			// Push each performer for an event to the even listing.
 			eventListing.eventPerformers.push(performer);
-			// Push each performer to the view model's observable array, so they appear in view.
+			// Push each performer to the view model's observable array, so they appear as a list in view.
 			vm.performers.push(performer);
 		}
 
@@ -64,6 +64,7 @@ var parseSGResults = function(data) {
 			lng: currentVenue.location.lon
 		}
 		eventList.push(eventListing);
+		// Push to view model so that event info can be displayed when a list item in the view is clicked.
 		vm.eventInfo.push(eventListing);
 	}
 	// Place marker on each event's location with performer information.
