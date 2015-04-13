@@ -9,7 +9,13 @@ function MyViewModel() {
 	this.runSearch = function() {
 		codeAddress(this.cityVal());
 	}
+	this.eventInfo = ko.observableArray();
 	this.performers = ko.observableArray();
+	this.displayEvent = function() {
+		index = this.performerIndex;
+		console.log(index);
+		console.log(self.eventInfo()[index]);
+	}
 }
 
 var vm = new MyViewModel();

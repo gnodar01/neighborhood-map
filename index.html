@@ -20,7 +20,7 @@
 	<div id="map-canvas"></div>
 	<div id="results">
 		<ul id="results-list" data-bind="foreach: performers">
-			<li data-bind="text: performerName"></li>
+			<li data-bind="text: performerName, click: $parent.displayEvent"></li>
 		</ul>
 	</div>
 	<div id="performer-info"></div>
