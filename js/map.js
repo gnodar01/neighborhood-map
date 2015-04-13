@@ -64,6 +64,7 @@ var mapSGResults = function(eventData) {
       content: '<div id="content">' +
       '<h1 id="content_header">' + eventData[i].eventTitle + '</h1>'
     });
+    vm.markers().push(eventMarker);
 
     // Event listner on each marker, that opens the corresponding info window.
     google.maps.event.addListener(eventMarker, 'click', function() {
@@ -76,6 +77,7 @@ var mapSGResults = function(eventData) {
       currentWindow = this.info;
       // Open the info window on the marker that has been clicked on.
       this.info.open(map,this);
+      console.log(this);
     });
   }
 }
