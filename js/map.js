@@ -39,9 +39,10 @@ var codeAddress = function (city) {
   });
 }
 
+var currentInfoWindow;
 // Make marker and corresponding info window for each event location.
 var mapSGResults = function(eventData) {
-  var eventMarker, contentString, eventLat, eventLng, eventLatLng, currentWindow;
+  var eventMarker, contentString, eventLat, eventLng, eventLatLng;
 
   for (var i = 0, eventDataLen = eventData.length; i < eventDataLen; i++) {
 
@@ -70,12 +71,12 @@ var mapSGResults = function(eventData) {
     // Event listner on each marker, that opens the corresponding info window.
     google.maps.event.addListener(eventMarker, 'click', function() {
       // If there is already a marker that has had its info window opened, close the info window.
-      if (currentWindow) {
-        currentWindow.close();
+      if (currentInfoWindow) {
+        currentInfoWindow.close();
       }
-      /* Set currentWindow to the info window on the marker that has been clicked on,
+      /* Set currentInfoWindow to the info window on the marker that has been clicked on,
       so that it can be closed when the next marker's info window is opened.*/
-      currentWindow = this.info;
+      currentInfoWindow = this.info;
       // Open the info window on the marker that has been clicked on.
       this.info.open(map,this);
       console.log(this);
