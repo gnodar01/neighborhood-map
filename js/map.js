@@ -23,9 +23,7 @@ var codeAddress = function (city) {
       /* Centers and sets a marker in the map on the geocoded address inputed by the user.
       results[0] is set because the geocoded address may contain more than one possible 
       result. The first result has the highest probability of being correct, and there
-      is usually no need to use the others. I could have it display all results and have the
-      user choose the correct one, but that may be overkill, because the vast majority of the
-      time the first result is correct*/
+      is usually no need to use the others.*/
       map.setCenter(resultsLocation);
       var marker = new google.maps.Marker({
         map: map,
@@ -39,6 +37,8 @@ var codeAddress = function (city) {
   });
 }
 
+/* When and info window is opened, currentInfoWindow will be set to it.
+It needs to be outside of the mapSGResults function so that the ViewModel may access it.*/
 var currentInfoWindow;
 // Make marker and corresponding info window for each event location.
 var mapSGResults = function(eventData) {
