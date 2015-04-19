@@ -15,8 +15,6 @@ function MyViewModel() {
 	this.displayEvent = function() {
 		var index = this.performerIndex;
 		var marker = self.markers()[index];
-		console.log(index);
-		console.log(self.eventInfo()[index]);
 
 		if (currentInfoWindow) {
 			currentInfoWindow.close();

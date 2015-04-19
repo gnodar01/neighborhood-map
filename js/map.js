@@ -79,7 +79,6 @@ var mapSGResults = function(eventData) {
       currentInfoWindow = this.info;
       // Open the info window on the marker that has been clicked on.
       this.info.open(map,this);
-      console.log(this);
     });
   }
 }

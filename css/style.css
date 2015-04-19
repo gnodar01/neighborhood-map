@@ -1,4 +1,5 @@
-html, body, .map-list {margin: 0; padding: 0; height: 100%; position: relative;}
-#map-canvas { height: 50%; width: 50%; margin: 0; padding: 0; position: absolute; left:0; top:0;}
-#results {height: 50%; width: 50%; margin: 0; padding:0; position: absolute; right:0; top:0;}
+html, body, .map-list {margin: 0; padding: 0; height: 90%; position: relative;}
+#map-canvas { height: 100%; width: 50%; margin: 0; padding: 0; position: absolute; left:0; top:0;}
+#results {height: 100%; width: 50%; margin: 0; padding:0; position: absolute; right:0; top:0; overflow:auto;}
 #content_header {color: orange;}
+#performer-info {width: 50%; word-wrap: break-word;}
