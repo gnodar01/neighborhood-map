@@ -1,18 +1,18 @@
 function MyViewModel() {
 	var self = this;
 
-	this.cityVal = ko.observable();
+	self.cityVal = ko.observable();
 	/* When the button is clicked, the city that was
 	inputted is sent to the google maps geocoder to get the
-	lat & long coordinates, this makes searching the SeatGeek
+	lat & long coordinates, self makes searching the SeatGeek
 	more accurate than simply searching by city*/
-	this.runSearch = function() {
+	self.runSearch = function() {
 		self.codeAddress(self.cityVal());
 	}
-	this.eventInfo = ko.observableArray();
-	this.performers = ko.observableArray();
-	this.markers = ko.observableArray();
-	this.displayEvent = function() {
+	self.eventInfo = ko.observableArray();
+	self.performers = ko.observableArray();
+	self.markers = ko.observableArray();
+	self.displayEvent = function() {
 		var index = this.performerIndex;
 		var marker = self.markers()[index];
 
@@ -27,7 +27,7 @@ function MyViewModel() {
 	}
 
 	var geocoder, map;
-	this.initialize = function () {
+	self.initialize = function () {
 	  geocoder = new google.maps.Geocoder();
 	  var latlng = new google.maps.LatLng(28.4158, -81.2989);
 	  var mapOptions = {
@@ -41,7 +41,7 @@ function MyViewModel() {
 	It needs to be outside of the mapSGResults function so that the ViewModel may access it.*/
 	var currentInfoWindow;
 	// Make marker and corresponding info window for each event location.
-	this.mapSGResults = function(eventData) {
+	self.mapSGResults = function(eventData) {
 	  var eventMarker, contentString, eventLat, eventLng, eventLatLng;
 
 	  for (var i = 0, eventDataLen = eventData.length; i < eventDataLen; i++) {
@@ -85,7 +85,7 @@ function MyViewModel() {
 
 	/* Parse the data response from the API call, and form an array of event objects
 		with relevant data, which will be displayed on the google map.*/
-	this.parseSGResults = function(data) {
+	self.parseSGResults = function(data) {
 		var numEvents = data.events.length;
 		var eventList = [];
 		for (var i = 0; i < numEvents; i++) {
@@ -140,7 +140,7 @@ function MyViewModel() {
 
 
 	// Runs the SeatGeek api, and returns a list of 25 events near the city the user inputted (after geocoding).
-	this.searchSeatGeek = function(lat,lng) {
+	self.searchSeatGeek = function(lat,lng) {
 		/* SeatGeeks api has a list of taxonomies you can search through. These are event types like races, dance events, plays, concerts, etc.
 		Only music related events are needed so it must be specified in the api call. The taxonomies array includes all music related taxonomies
 		that are returned by SeatGeek. Each taxonomy is looped through, with an added search query, and appended to the full query, which is then
@@ -160,7 +160,7 @@ function MyViewModel() {
 
 	/* Takes city, geocodes it, gets the lat & lng coords, sets a marker on that location in the map,
 	 and runs the search SeatGeek function on those coords. */
-	this.codeAddress = function (city) {
+	self.codeAddress = function (city) {
 	  geocoder.geocode( {'address': city}, function(results, status) {
 	    if (status == google.maps.GeocoderStatus.OK) {
 	      resultsLocation = results[0].geometry.location
