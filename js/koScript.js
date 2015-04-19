@@ -13,14 +13,8 @@ function MyViewModel() {
 	this.performers = ko.observableArray();
 	this.markers = ko.observableArray();
 	this.displayEvent = function() {
-		listItem = this;
-		self.displayInfoWindow(listItem);
-		self.displayEvent(listItem);
-	}
-	this.displayInfoWindow = function(listItem) {
-		var index = listItem.performerIndex;
+		var index = this.performerIndex;
 		var marker = self.markers()[index];
-		console.log(marker)
 
 		if (currentInfoWindow) {
 			currentInfoWindow.close();
@@ -30,13 +24,6 @@ function MyViewModel() {
 		}
 		//self.openInfoWindow = marker;
 		marker.info.open(map,marker)
-	}
-	this.dipslayEventInfo = function(listItem) {
-		console.log(listItem)
-		var eventName
-		var eventLocation
-		var eventDate
-		var eventPerformers
 	}
 }
 
