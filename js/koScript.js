@@ -17,6 +17,7 @@ function MyViewModel() {
 
 	self.currentEventName = ko.observable();
 	self.currentEventDate = ko.observable();
+	self.currentPerformers = ko.observableArray();
 
 	self.displayEvent = function() {
 		var index = this.performerIndex;
@@ -36,6 +37,10 @@ function MyViewModel() {
 
 		self.currentEventName(currentEvent.eventTitle);
 		self.currentEventDate(currentEvent.eventDate);
+
+		for (var i = 0, perfLength = currentEvent.eventPerformers.length;  i < perfLength; i++) {
+			self.currentPerformers.push(currentEvent.eventPerformers[i]);
+		}
 	}
 
 
@@ -130,7 +135,7 @@ function MyViewModel() {
 				var dateString = date[1] + "/" + date[2] + "/" + date[0];
 				var timeString = time[0] + ":" + time[1] + " " + time[3];
 				var parsedDateString = dateString + " - " + timeString;
-				
+
 				return parsedDateString;
 			}(currentEvent.datetime_local));
 

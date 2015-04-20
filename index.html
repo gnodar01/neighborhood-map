@@ -24,8 +24,11 @@
 		</div>
 	</div>
 	<div id="performer-info">
-		<p data-bind="text: currentEventName"></p>
-		<p data-bind="text: currentEventDate"></p>
+		<p data-bind="visible: currentEventName">Event: <span data-bind="text: currentEventName"></span></p>
+		<p data-bind="visible: currentEventDate">Date/Time: <span data-bind="text: currentEventDate"></span></p>
+		<div data-bind="foreach: currentPerformers">
+			<p data-bind="visible: performerName">Peformer: <span data-bind="text: performerName"></span></p>
+		</div>
 	</div>
 
 	<script src="js/koScript.js"></script>
