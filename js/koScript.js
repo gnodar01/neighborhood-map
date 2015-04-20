@@ -8,7 +8,7 @@ function MyViewModel() {
 	more accurate than simply searching by city*/
 
 	self.runSearch = function() {
-		self.codeAddress(self.cityVal());
+		codeAddress(self.cityVal());
 	}
 
 	self.eventInfo = ko.observableArray();
@@ -29,7 +29,7 @@ function MyViewModel() {
 	}
 
 	var geocoder, map;
-	self.initialize = function () {
+	var initialize = function () {
 	  geocoder = new google.maps.Geocoder();
 	  var latlng = new google.maps.LatLng(28.4158, -81.2989);
 	  var mapOptions = {
@@ -43,7 +43,7 @@ function MyViewModel() {
 	It needs to be outside of the mapSGResults function so that the ViewModel may access it.*/
 	var currentInfoWindow;
 	// Make marker and corresponding info window for each event location.
-	self.mapSGResults = function(eventData) {
+	var mapSGResults = function(eventData) {
 	  var eventMarker, contentString, eventLat, eventLng, eventLatLng;
 
 	  for (var i = 0, eventDataLen = eventData.length; i < eventDataLen; i++) {
@@ -68,7 +68,7 @@ function MyViewModel() {
 	      '<h1 id="content_header">' + eventData[i].eventTitle + '</h1>'
 	    });
 	    // Push to view model, so that the when a list item in the view is clicked, the corresponding info window will open.
-	    self.markers().push(eventMarker);
+	    self.markers.push(eventMarker);
 
 	    // Event listner on each marker, that opens the corresponding info window.
 	    google.maps.event.addListener(eventMarker, 'click', function() {
@@ -87,7 +87,7 @@ function MyViewModel() {
 
 	/* Parse the data response from the API call, and form an array of event objects
 		with relevant data, which will be displayed on the google map.*/
-	self.parseSGResults = function(data) {
+	var parseSGResults = function(data) {
 		var numEvents = data.events.length;
 		var eventList = [];
 		for (var i = 0; i < numEvents; i++) {
@@ -136,13 +136,13 @@ function MyViewModel() {
 			self.eventInfo.push(eventListing);
 		}
 		// Place marker on each event's location with performer information.
-		self.mapSGResults(eventList);
+		mapSGResults(eventList);
 		console.log(eventList)
 	}
 
 
 	// Runs the SeatGeek api, and returns a list of 25 events near the city the user inputted (after geocoding).
-	self.searchSeatGeek = function(lat,lng) {
+	var searchSeatGeek = function(lat,lng) {
 		/* SeatGeeks api has a list of taxonomies you can search through. These are event types like races, dance events, plays, concerts, etc.
 		Only music related events are needed so it must be specified in the api call. The taxonomies array includes all music related taxonomies
 		that are returned by SeatGeek. Each taxonomy is looped through, with an added search query, and appended to the full query, which is then
@@ -156,13 +156,13 @@ function MyViewModel() {
 		}
 		var customURL = 'http://api.seatgeek.com/2/events?per_page=50' + fullTaxonomyQuery + '&lat=' +lat+ '&lon=' + lng;
 		$.getJSON(customURL, function (data) {
-			self.parseSGResults(data);
+			parseSGResults(data);
 		});
 	}
 
 	/* Takes city, geocodes it, gets the lat & lng coords, sets a marker on that location in the map,
 	 and runs the search SeatGeek function on those coords. */
-	self.codeAddress = function (city) {
+	var codeAddress = function (city) {
 	  geocoder.geocode( {'address': city}, function(results, status) {
 	    if (status == google.maps.GeocoderStatus.OK) {
 	      resultsLocation = results[0].geometry.location
@@ -183,11 +183,11 @@ function MyViewModel() {
 	    } else {
 	      alert('Geocode was not successful for the following reason: ' + status);
 	    }
-	    self.searchSeatGeek(cityLat,cityLng);
+	    searchSeatGeek(cityLat,cityLng);
 	  });
 	}
 
-	google.maps.event.addDomListener(window, 'load', self.initialize);
+	google.maps.event.addDomListener(window, 'load', initialize);
 
 }
 
