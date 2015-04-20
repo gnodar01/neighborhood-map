@@ -43,7 +43,7 @@ function MyViewModel() {
 	}
 
 	/* When and info window is opened, currentInfoWindow will be set to it.
-	It needs to be outside of the mapSGResults function so that the ViewModel may access it.*/
+	It needs to be outside of the mapSGResults function so that the View may access it.*/
 	var currentInfoWindow;
 	// Make marker and corresponding info window for each event location.
 	var mapSGResults = function(eventData) {
@@ -70,7 +70,7 @@ function MyViewModel() {
 	      '<h1 id="content_header">' + eventData[i].eventTitle + '</h1>'
 	    });
 
-	    // Push to view model, so that the when a list item in the view is clicked, the corresponding info window will open.
+	    // Push to observable array, so that the when a list item in the view is clicked, the corresponding info window will open.
 	    self.markers.push(eventMarker);
 
 	    // Event listner on each marker, that opens the corresponding info window.
@@ -125,7 +125,7 @@ function MyViewModel() {
 				performer.performerIndex = i;
 				// Push each performer for an event to the even listing.
 				eventListing.eventPerformers.push(performer);
-				// Push each performer to the view model's observable array, so they appear as a list in view.
+				// Push each performer to observable array, so they appear as a list in view.
 				self.performers.push(performer);
 			}
 
@@ -137,7 +137,7 @@ function MyViewModel() {
 			}
 
 			eventList.push(eventListing);
-			// Push to view model so that event info can be displayed when a list item in the view is clicked.
+			// Push to observable array so that event info can be displayed when a list item in the view is clicked.
 			self.eventInfo.push(eventListing);
 		}
 		// Place marker on each event's location with performer information.
