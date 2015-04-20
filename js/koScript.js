@@ -20,10 +20,16 @@ function MyViewModel() {
 	self.currentPerformers = ko.observableArray();
 
 	self.displayEvent = function() {
-		var index = this.performerIndex;
+		/* If a performer from the results list is clicked, index is set to the performerIndex property of that list item.
+		 If a marker is clicked, index is set to the marker's eventIndex property.
+		 Both refer to their respective event's index value, but the 'this' value differs depending on how displayEvent()
+		is triggered. */
+		var index = this.performerIndex || this.eventIndex;
+
 		var marker = self.markers()[index];
 		var currentEvent = self.eventInfo()[index];
 
+		// If an info window is open, close it and set it to current event's info window.
 		if (currentInfoWindow) {
 			currentInfoWindow.close();
 			currentInfoWindow = marker.info;
@@ -31,10 +37,10 @@ function MyViewModel() {
 		else {
 			currentInfoWindow = marker.info;
 		}
+		// Open current event's info window
 		marker.info.open(map,marker)
 
-		console.log(self.eventInfo()[index])
-
+		// Set observables with event info so that the performer info area in the View will be populated
 		self.currentEventName(currentEvent.eventTitle);
 		self.currentEventDate(currentEvent.eventDate);
 
@@ -64,45 +70,53 @@ function MyViewModel() {
 	var currentInfoWindow;
 	// Make marker and corresponding info window for each event location.
 	var mapSGResults = function(eventData) {
-	  var eventMarker, contentString, eventLat, eventLng, eventLatLng;
+		var eventMarker, contentString, eventLat, eventLng, eventLatLng;
 
-	  for (var i = 0, eventDataLen = eventData.length; i < eventDataLen; i++) {
-	    eventLat = eventData[i].eventVenue.lat;
-	    eventLng = eventData[i].eventVenue.lng;
-	    // Construct a lat/long object using google maps LatLng class.
-	    eventLatLng = new google.maps.LatLng(eventLat, eventLng);
+		for (var i = 0, eventDataLen = eventData.length; i < eventDataLen; i++) {
+			eventLat = eventData[i].eventVenue.lat;
+			eventLng = eventData[i].eventVenue.lng;
+			// Construct a lat/long object using google maps LatLng class.
+			eventLatLng = new google.maps.LatLng(eventLat, eventLng);
 
-	    // Place event marker on map with custom icon to differentiate it.
-	    // Todo: create custom icon for each genre.
-	    eventMarker = new google.maps.Marker({
-	      map: map,
-	      position: eventLatLng,
-	      icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
-	    });
+			// Place event marker on map with custom icon to differentiate it.
+			// Todo: create custom icon for each genre.
+			eventMarker = new google.maps.Marker({
+				map: map,
+				position: eventLatLng,
+				icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+			});
 
-	    // New info window for each event, with it's correspoinding contentString.
-	    eventMarker.info = new google.maps.InfoWindow({
-	      // HTML that provides markup for event information displayed in the google maps info window.
-	      content: '<div id="content">' +
-	      '<h1 id="content_header">' + eventData[i].eventTitle + '</h1>'
-	    });
+			// New info window for each event, with it's correspoinding contentString.
+			eventMarker.info = new google.maps.InfoWindow({
+				// HTML that provides markup for event information displayed in the google maps info window.
+				content: '<div id="content">' +
+				'<h1 id="content_header">' + eventData[i].eventTitle + '</h1>'
+			});
+			/* Create and set an eventIndex property on each marker, so that each marker always carries a reference
+				to the event it refers to */
+			eventMarker.eventIndex = i;
 
-	    // Push to observable array, so that the when a list item in the view is clicked, the corresponding info window will open.
-	    self.markers.push(eventMarker);
+			// Push to observable array, so that the when a list item in the view is clicked, the corresponding info window will open.
+			self.markers.push(eventMarker);
 
-	    // Event listner on each marker, that opens the corresponding info window.
-	    google.maps.event.addListener(eventMarker, 'click', function() {
-	      // If there is already a marker that has had its info window opened, close the info window.
-	      if (currentInfoWindow) {
-	        currentInfoWindow.close();
-	      }
-	      /* Set currentInfoWindow to the info window on the marker that has been clicked on,
-	      so that it can be closed when the next marker's info window is opened.*/
-	      currentInfoWindow = this.info;
-	      // Open the info window on the marker that has been clicked on.
-	      this.info.open(map,this);
-	    });
-	  }
+			// Event listner on each marker, which opens the corresponding info window, and displays event info in the View.
+			google.maps.event.addListener(eventMarker, 'click', function() {
+				// If there is already a marker that has had its info window opened, close the info window.
+				if (currentInfoWindow) {
+					currentInfoWindow.close();
+				}
+				/* Set currentInfoWindow to the info window of the marker that has been clicked on,
+				so that it can be closed when the next marker's info window is opened.*/
+				currentInfoWindow = this.info;
+				// Open the info window on the marker that has been clicked on.
+				this.info.open(map,this);
+
+				/* displayEvent is a 'data-bind'ed function in the HTML. We call it on 'this' (the clicked marker)
+				 to simulate the effect of clicking a list item in the View's result list. The displayEvent function
+				 has a way to account for the different structures of a marker object and a result list object. */
+				self.displayEvent.call(this);
+			});
+		}
 	}
 
 	/* Parse the data response from the API call, and form an array of event objects
