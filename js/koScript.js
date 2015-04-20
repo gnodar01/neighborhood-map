@@ -15,6 +15,9 @@ function MyViewModel() {
 	self.performers = ko.observableArray();
 	self.markers = ko.observableArray();
 
+	self.currentEventName = ko.observable();
+	self.currentEventDate = ko.observable();
+
 	self.displayEvent = function() {
 		var index = this.performerIndex;
 		var marker = self.markers()[index];
@@ -22,10 +25,16 @@ function MyViewModel() {
 		if (currentInfoWindow) {
 			currentInfoWindow.close();
 			currentInfoWindow = marker.info;
-		} else {
+		}
+		else {
 			currentInfoWindow = marker.info;
 		}
 		marker.info.open(map,marker)
+
+		console.log(self.eventInfo()[index])
+		var currentEvent = self.eventInfo()[index];
+		self.currentEventName(currentEvent.eventTitle);
+		self.currentEventDate(currentEvent.eventDate);
 	}
 
 
@@ -92,7 +101,6 @@ function MyViewModel() {
 		with relevant data, which will be displayed on the google map.*/
 	var parseSGResults = function(data) {
 		var numEvents = data.events.length;
-		var eventList = [];
 
 		for (var i = 0; i < numEvents; i++) {
 			var currentEvent = data.events[i], currentVenue = currentEvent.venue;
@@ -106,10 +114,10 @@ function MyViewModel() {
 				if the event time is flagged true by SeatGeek, then the show date is correct, but the time
 				is set to 3:30 a.m. */
 			if (currentEvent.date_tbd) {
-				eventListing.eventDateEstimate = currentEvent.datetime_local;
+				eventListing.eventDate = currentEvent.datetime_local + " (Date estimated)";
 			}
 			else if (currentEvent.time_tbd) {
-				eventListing.eventTimeEstimate = currentEvent.datetime_local;
+				eventListing.eventDate = currentEvent.datetime_local + " (Exact time not set)";
 			}
 			else {
 				eventListing.eventDate = currentEvent.datetime_local;
@@ -136,13 +144,12 @@ function MyViewModel() {
 				lng: currentVenue.location.lon
 			}
 
-			eventList.push(eventListing);
 			// Push to observable array so that event info can be displayed when a list item in the view is clicked.
 			self.eventInfo.push(eventListing);
 		}
 		// Place marker on each event's location with performer information.
-		mapSGResults(eventList);
-		console.log(eventList)
+		mapSGResults(self.eventInfo());
+		console.log(self.eventInfo())
 	}
 
 	// Runs the SeatGeek api, and returns a list of 25 events near the city the user inputted (after geocoding).
