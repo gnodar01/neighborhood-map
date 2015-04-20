@@ -28,6 +28,9 @@ function MyViewModel() {
 		marker.info.open(map,marker)
 	}
 
+
+	/*-------------------PRIVATE-------------------*/
+
 	var geocoder, map;
 	var initialize = function () {
 	  geocoder = new google.maps.Geocoder();
@@ -47,7 +50,6 @@ function MyViewModel() {
 	  var eventMarker, contentString, eventLat, eventLng, eventLatLng;
 
 	  for (var i = 0, eventDataLen = eventData.length; i < eventDataLen; i++) {
-
 	    eventLat = eventData[i].eventVenue.lat;
 	    eventLng = eventData[i].eventVenue.lng;
 	    // Construct a lat/long object using google maps LatLng class.
@@ -67,6 +69,7 @@ function MyViewModel() {
 	      content: '<div id="content">' +
 	      '<h1 id="content_header">' + eventData[i].eventTitle + '</h1>'
 	    });
+
 	    // Push to view model, so that the when a list item in the view is clicked, the corresponding info window will open.
 	    self.markers.push(eventMarker);
 
@@ -90,6 +93,7 @@ function MyViewModel() {
 	var parseSGResults = function(data) {
 		var numEvents = data.events.length;
 		var eventList = [];
+
 		for (var i = 0; i < numEvents; i++) {
 			var currentEvent = data.events[i], currentVenue = currentEvent.venue;
 			var eventListing = {};
@@ -131,6 +135,7 @@ function MyViewModel() {
 				lat: currentVenue.location.lat,
 				lng: currentVenue.location.lon
 			}
+
 			eventList.push(eventListing);
 			// Push to view model so that event info can be displayed when a list item in the view is clicked.
 			self.eventInfo.push(eventListing);
@@ -139,7 +144,6 @@ function MyViewModel() {
 		mapSGResults(eventList);
 		console.log(eventList)
 	}
-
 
 	// Runs the SeatGeek api, and returns a list of 25 events near the city the user inputted (after geocoding).
 	var searchSeatGeek = function(lat,lng) {
@@ -150,11 +154,14 @@ function MyViewModel() {
 		var taxonomies = ['concert','music_festival','classical','classical_opera','classical_vocal','classical_orchestral_instrumental'],
 		taxonomySearchString = '&taxonomies.name=',
 		fullTaxonomyQuery = "";
+
 		for (var i = 0, taxLength = taxonomies.length; i < taxLength; i++) {
 			var taxonomySearchQuery = taxonomySearchString + taxonomies[i];
 			fullTaxonomyQuery += taxonomySearchQuery;
 		}
-		var customURL = 'http://api.seatgeek.com/2/events?per_page=50' + fullTaxonomyQuery + '&lat=' +lat+ '&lon=' + lng;
+
+		var customURL = 'http://api.seatgeek.com/2/events?per_page=50' + fullTaxonomyQuery + '&lat=' + lat + '&lon=' + lng;
+
 		$.getJSON(customURL, function (data) {
 			parseSGResults(data);
 		});
@@ -180,15 +187,16 @@ function MyViewModel() {
 	        position: resultsLocation,
 	        icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
 	      });
-	    } else {
+	    } 
+	    else {
 	      alert('Geocode was not successful for the following reason: ' + status);
 	    }
+
 	    searchSeatGeek(cityLat,cityLng);
 	  });
 	}
 
 	google.maps.event.addDomListener(window, 'load', initialize);
-
 }
 
 var vm = new MyViewModel();
