@@ -4,14 +4,17 @@ function MyViewModel() {
 	self.cityVal = ko.observable();
 	/* When the button is clicked, the city that was
 	inputted is sent to the google maps geocoder to get the
-	lat & long coordinates, self makes searching the SeatGeek
+	lat & long coordinates, which makes searching the SeatGeek
 	more accurate than simply searching by city*/
+
 	self.runSearch = function() {
 		self.codeAddress(self.cityVal());
 	}
+
 	self.eventInfo = ko.observableArray();
 	self.performers = ko.observableArray();
 	self.markers = ko.observableArray();
+
 	self.displayEvent = function() {
 		var index = this.performerIndex;
 		var marker = self.markers()[index];
@@ -22,7 +25,6 @@ function MyViewModel() {
 		} else {
 			currentInfoWindow = marker.info;
 		}
-		//self.openInfoWindow = marker;
 		marker.info.open(map,marker)
 	}
 
