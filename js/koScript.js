@@ -21,6 +21,7 @@ function MyViewModel() {
 	self.displayEvent = function() {
 		var index = this.performerIndex;
 		var marker = self.markers()[index];
+		var currentEvent = self.eventInfo()[index];
 
 		if (currentInfoWindow) {
 			currentInfoWindow.close();
@@ -32,7 +33,7 @@ function MyViewModel() {
 		marker.info.open(map,marker)
 
 		console.log(self.eventInfo()[index])
-		var currentEvent = self.eventInfo()[index];
+
 		self.currentEventName(currentEvent.eventTitle);
 		self.currentEventDate(currentEvent.eventDate);
 	}
@@ -104,6 +105,35 @@ function MyViewModel() {
 
 		for (var i = 0; i < numEvents; i++) {
 			var currentEvent = data.events[i], currentVenue = currentEvent.venue;
+
+			// IIFE which takes in the ugly standardized date format returned by SeatGeek, and makes it easily readable
+			// SeatGeeks returned date format is: yyyy-mm-ddThh:mm:ss
+			var currentDate = (function(dateToParse) {
+				// Split inputted date into two arrays; 0: Date, 1: Time
+				var dateTime = dateToParse.split('T');
+				// Split date into three arrays; 0: yyyy, 1: mm, 2: dd
+				var date = dateTime[0].split('-');
+				// Split time into three arrays; 0: hh, 1: mm, 2: ss
+				var time = dateTime[1].split(':');
+
+				// Translate the hour string into integer (so that it rids 0s in front of single digit times e.g. 3:00 vs 03:00)
+				time[0] = parseInt(time[0]);
+				// Translate from 24 hour time to 12 hour time
+				if (time[0] >= 13) {
+					time[0] -= 12;
+					time[3] = "p.m.";
+				}
+				else {
+					time[3] = "a.m.";
+				}
+
+				var dateString = date[1] + "/" + date[2] + "/" + date[0];
+				var timeString = time[0] + ":" + time[1] + " " + time[3];
+				var parsedDateString = dateString + " - " + timeString;
+				
+				return parsedDateString;
+			}(currentEvent.datetime_local));
+
 			var eventListing = {};
 
 			eventListing.eventTitle = currentEvent.title;
@@ -114,13 +144,13 @@ function MyViewModel() {
 				if the event time is flagged true by SeatGeek, then the show date is correct, but the time
 				is set to 3:30 a.m. */
 			if (currentEvent.date_tbd) {
-				eventListing.eventDate = currentEvent.datetime_local + " (Date estimated)";
+				eventListing.eventDate = currentDate + " (Date estimated)";
 			}
 			else if (currentEvent.time_tbd) {
-				eventListing.eventDate = currentEvent.datetime_local + " (Exact time not set)";
+				eventListing.eventDate = currentDate + " (Exact time not set)";
 			}
 			else {
-				eventListing.eventDate = currentEvent.datetime_local;
+				eventListing.eventDate = currentDate;
 			}
 			
 			eventListing.eventPerformers = [];
