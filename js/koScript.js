@@ -38,6 +38,8 @@ function MyViewModel() {
 		self.currentEventName(currentEvent.eventTitle);
 		self.currentEventDate(currentEvent.eventDate);
 
+		// Empty currentPerformers Array
+		self.currentPerformers([]);
 		for (var i = 0, perfLength = currentEvent.eventPerformers.length;  i < perfLength; i++) {
 			self.currentPerformers.push(currentEvent.eventPerformers[i]);
 		}
