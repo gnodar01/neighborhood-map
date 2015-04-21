@@ -6,7 +6,6 @@ function MyViewModel() {
 	inputted is sent to the google maps geocoder to get the
 	lat & long coordinates, which makes searching the SeatGeek
 	more accurate than simply searching by city*/
-
 	self.runSearch = function() {
 		codeAddress(self.cityVal());
 	}
@@ -17,6 +16,8 @@ function MyViewModel() {
 
 	self.currentEventName = ko.observable();
 	self.currentEventDate = ko.observable();
+	self.currentVenueName = ko.observable();
+	self.currentVenueAddress = ko.observable();
 	self.currentPerformers = ko.observableArray();
 
 	self.displayEvent = function() {
@@ -43,6 +44,9 @@ function MyViewModel() {
 		// Set observables with event info so that the performer info area in the View will be populated
 		self.currentEventName(currentEvent.eventTitle);
 		self.currentEventDate(currentEvent.eventDate);
+
+		self.currentVenueName(currentEvent.eventVenue.name);
+		self.currentVenueAddress(currentEvent.eventVenue.address);
 
 		// Empty currentPerformers Array
 		self.currentPerformers([]);
