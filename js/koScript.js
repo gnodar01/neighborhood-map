@@ -19,6 +19,7 @@ function MyViewModel() {
 	self.currentVenueName = ko.observable();
 	self.currentVenueAddress = ko.observable();
 	self.currentPerformers = ko.observableArray();
+	self.currentEventIndex = ko.observableArray();
 
 	self.displayEvent = function() {
 		/* If a performer from the results list is clicked, index is set to the performerIndex property of that list item.
@@ -29,6 +30,11 @@ function MyViewModel() {
 
 		var marker = self.markers()[index];
 		var currentEvent = self.eventInfo()[index];
+
+		/* Result list items have a css data-bind that checks if its index equals the index currently
+		 in the currentEventIndex observable. If it is, all list items with the same index have the
+		 highlighted-item class attached */
+		self.currentEventIndex(index);
 
 		// If an info window is open, close it and set it to current event's info window.
 		if (currentInfoWindow) {
