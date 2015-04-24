@@ -22,11 +22,12 @@ function MyViewModel() {
 	self.currentEventIndex = ko.observableArray();
 
 	self.displayEvent = function() {
-		/* If a performer from the results list is clicked, index is set to the performerIndex property of that list item.
+		/* Items in the result list and markers both have an eventIndex property refferencing their events.
+		 If a performer from the results list is clicked, index is set to the eventIndex property of that list item.
 		 If a marker is clicked, index is set to the marker's eventIndex property.
 		 Both refer to their respective event's index value, but the 'this' value differs depending on how displayEvent()
-		is triggered. */
-		var index = this.performerIndex || this.eventIndex;
+		 is triggered. */
+		var index = this.eventIndex;
 
 		var marker = self.markers()[index];
 		var currentEvent = self.eventInfo()[index];
@@ -191,7 +192,7 @@ function MyViewModel() {
 				performer.performerImgURL = currentEvent.performers[j].image;
 				// Each performer on SeatGeek's database has a unique ID, which among other things, can be used with the Echo Nest API
 				performer.performerID = currentEvent.performers[j].id;
-				performer.performerIndex = i;
+				performer.eventIndex = i;
 				// Push each performer for an event to the even listing.
 				eventListing.eventPerformers.push(performer);
 				// Push each performer to observable array, so they appear as a list in view.
