@@ -130,12 +130,21 @@ function MyViewModel() {
 		}
 	}
 
+	var searchEchoNest = function(performerID) {
+		var echoKey = "2QHXFMFAW2PDSCYKW";
+		var perfID = performerID;
+		var query = "http://developer.echonest.com/api/v4/artist/hotttnesss?api_key=" + echoKey + "&id=seatgeek:artist:35&format=jsonp&callback=?";
+		$.getJSON(query, function (results) {
+			console.log(results);
+		});
+
+		return "donkey";
+	}
+
 	/* Parse the data response from the API call, and form an array of event objects
 		with relevant data, which will be displayed on the google map.*/
 	var parseSGResults = function(data) {
-		var numEvents = data.events.length;
-
-		for (var i = 0; i < numEvents; i++) {
+		for (var i = 0, numEvents = data.events.length; i < numEvents; i++) {
 			var currentEvent = data.events[i], currentVenue = currentEvent.venue;
 
 			// IIFE which takes in the ugly standardized date format returned by SeatGeek, and makes it easily readable
@@ -186,14 +195,17 @@ function MyViewModel() {
 			}
 			
 			eventListing.eventPerformers = [];
-			for (var j = 0; j < currentEvent.performers.length; j++) {
+			for (var j = 0, perfLength = currentEvent.performers.length; j < perfLength; j++) {
 				var performer = {};
 				performer.performerName = currentEvent.performers[j].name;
 				performer.performerImgURL = currentEvent.performers[j].image;
 				// Each performer on SeatGeek's database has a unique ID, which among other things, can be used with the Echo Nest API
 				performer.performerID = currentEvent.performers[j].id;
+				// Run Echo Nest API using Seat Geek's performer ID, to get additional performer information.
+				//performer.echoNestData = searchEchoNest(performer.performerID);
+				// Set the index of the event the performer belongs to, so that performer always has reference to the event.
 				performer.eventIndex = i;
-				// Push each performer for an event to the even listing.
+				// Push each performer for an event to the event listing.
 				eventListing.eventPerformers.push(performer);
 				// Push each performer to observable array, so they appear as a list in view.
 				self.performers.push(performer);
@@ -212,6 +224,9 @@ function MyViewModel() {
 		// Place marker on each event's location with performer information.
 		mapSGResults(self.eventInfo());
 		console.log(self.eventInfo())
+		// Test echo with single API call
+		var donkey = searchEchoNest(35);
+		console.log(donkey);
 	}
 
 	// Runs the SeatGeek api, and returns a list of 25 events near the city the user inputted (after geocoding).
