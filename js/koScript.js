@@ -2,17 +2,7 @@ function MyViewModel() {
 	var self = this;
 
 	self.cityVal = ko.observable("Orlando");
-	/* When the button is clicked, the city that was
-	inputted is sent to the google maps geocoder to get the
-	lat & long coordinates, which makes searching the SeatGeek
-	more accurate than simply searching by city*/
-	self.runSearch = function() {
-		codeAddress(self.cityVal());
-	}
-
-	self.runEcho = function() {
-		searchEchoNest(35);
-	}
+	self.venueVal = ko.observable();
 
 	self.eventInfo = ko.observableArray();
 	self.performers = ko.observableArray();
@@ -26,6 +16,18 @@ function MyViewModel() {
 	self.currentPerformerID = ko.observable();
 	self.currentEventIndex = ko.observable();
 
+	/* When the button is clicked, the city that was
+	inputted is sent to the google maps geocoder to get the
+	lat & long coordinates, which makes searching the SeatGeek
+	more accurate than simply searching by city*/
+	self.runSearch = function() {
+		var city = self.cityVal();
+		codeAddress(city);
+	}
+
+	self.runEcho = function() {
+		searchEchoNest(35);
+	}
 
 	self.displayEvent = function() {
 		var eventObject = this;
@@ -36,6 +38,11 @@ function MyViewModel() {
 		else {
 			displayMarkerInfo(eventObject);
 		}
+	}
+
+	self.filterVenues = function() {
+		var venue = self.venueVal();
+		var events = self.eventInfo();
 	}
 
 
@@ -50,6 +57,16 @@ function MyViewModel() {
 	    center: latlng
 	  }
 	  map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+	}
+
+	var allEvents = [],
+		allPerformers = [],
+		allMarkers = [];
+
+	var removeFilter = function() {
+		self.eventInfo = ko.observableArray(allEvents);
+		self.performers = ko.observableArray(allPerformers);
+		self.markers = ko.observableArray(allMarkers);
 	}
 
 	var displayListInfo = function(listItem) {
@@ -154,8 +171,8 @@ function MyViewModel() {
 				to the event it refers to */
 			eventMarker.eventIndex = i;
 
-			// Push to observable array, so that the when a list item in the view is clicked, the corresponding info window will open.
-			self.markers.push(eventMarker);
+			// Push to array of all markers
+			allMarkers.push(eventMarker);
 
 			// Event listner on each marker, which opens the corresponding info window, and displays event info in the View.
 			google.maps.event.addListener(eventMarker, 'click', function() {
@@ -175,6 +192,8 @@ function MyViewModel() {
 				self.displayEvent.call(this);
 			});
 		}
+		// Set to observable array, so that the when a list item in the view is clicked, the corresponding info window will open.
+		self.markers(allMarkers);
 	}
 
 	var searchEchoNest = function(performerID) {
@@ -254,9 +273,11 @@ function MyViewModel() {
 				performer.performerIndex = j;
 				// Push each performer for an event to the event listing.
 				eventListing.eventPerformers.push(performer);
-				// Push each performer to observable array, so they appear as a list in view.
-				self.performers.push(performer);
+				// Push to array which holds all performers
+				allPerformers.push(performer);
 			}
+			// Set all performers to observable array, so they appear as a list in view.
+			self.performers(allPerformers);
 
 			eventListing.eventVenue = {
 				name: currentVenue.name,
@@ -265,9 +286,11 @@ function MyViewModel() {
 				lng: currentVenue.location.lon
 			}
 
-			// Push to observable array so that event info can be displayed when a list item in the view is clicked.
-			self.eventInfo.push(eventListing);
+			// Push to all events array which holds each event listing returned from SeatGeek
+			allEvents.push(eventListing);
 		}
+		// Set to observable array so that event info can be displayed when a list item in the view is clicked.
+		self.eventInfo(allEvents);
 		// Place marker on each event's location with performer information.
 		mapSGResults(self.eventInfo());
 		console.log(self.eventInfo())
