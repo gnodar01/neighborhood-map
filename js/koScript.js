@@ -18,7 +18,7 @@ function MyViewModel() {
 	self.performers = ko.observableArray();
 	self.markers = ko.observableArray();
 
-	self.currentPerformers = ko.observableArray();
+	self.currentPerformerName = ko.observable();
 	self.currentEventName = ko.observable();
 	self.currentEventDate = ko.observable();
 	self.currentVenueName = ko.observable();
@@ -27,19 +27,41 @@ function MyViewModel() {
 	self.currentEventIndex = ko.observable();
 
 
-
 	self.displayEvent = function() {
-		/* Items in the result list and markers both have an eventIndex property refferencing their events.
-		 If a performer from the results list is clicked, index is set to the eventIndex property of that list item.
-		 If a marker is clicked, index is set to the marker's eventIndex property.
-		 Both refer to their respective event's index value, but the 'this' value differs depending on how displayEvent()
-		 is triggered. */
-		var index = this.eventIndex;
+		var eventObject = this;
+
+		if (this.performerName) {
+			displayListInfo(eventObject);
+		}
+		else {
+			displayMarkerInfo(eventObject);
+		}
+	}
+
+
+	/*-------------------PRIVATE-------------------*/
+
+	var geocoder, map;
+	var initialize = function () {
+	  geocoder = new google.maps.Geocoder();
+	  var latlng = new google.maps.LatLng(28.4158, -81.2989);
+	  var mapOptions = {
+	  	zoom: 8,
+	    center: latlng
+	  }
+	  map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+	}
+
+	var displayListInfo = function(listItem) {
+		var index = listItem.eventIndex;
+		// Set perfomer's location in eventPerformer array within event object.
+		var performerIndex = listItem.performerIndex
 		// Get performer's unique ID
-		var performerID = this.performerID;
+		var performerID = listItem.performerID;
 
 		var marker = self.markers()[index];
 		var currentEvent = self.eventInfo()[index];
+		var currentPerformer = currentEvent.eventPerformers[performerIndex];
 
 		/* Result list items have a css data-bind that checks if its index equals the index currently
 		 in the currentEventIndex observable. If it is, all list items with the same index (all event performers) 
@@ -67,26 +89,38 @@ function MyViewModel() {
 		self.currentVenueName(currentEvent.eventVenue.name);
 		self.currentVenueAddress(currentEvent.eventVenue.address);
 
-		// Empty currentPerformers Array
-		self.currentPerformers([]);
-		// Push all performers within the clicked event to currentPeformers observable.
-		for (var i = 0, perfLength = currentEvent.eventPerformers.length;  i < perfLength; i++) {
-			self.currentPerformers.push(currentEvent.eventPerformers[i]);
-		}
+		self.currentPerformerName(currentPerformer.performerName);
+
 	}
 
+	var displayMarkerInfo = function(markerEvent) {
+		var index = markerEvent.eventIndex;
+		var marker = self.markers()[index];
+		var currentEvent = self.eventInfo()[index];
 
-	/*-------------------PRIVATE-------------------*/
+		self.currentEventIndex(index);
+		/* When marker is selected, only the event is selected, not a specific performer,
+		 so the performer name and ID observables are emptied. */
+		self.currentPerformerID("");
+		self.currentPerformerName("");
 
-	var geocoder, map;
-	var initialize = function () {
-	  geocoder = new google.maps.Geocoder();
-	  var latlng = new google.maps.LatLng(28.4158, -81.2989);
-	  var mapOptions = {
-	  	zoom: 8,
-	    center: latlng
-	  }
-	  map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+		// If an info window is open, close it and set it to current event's info window.
+		if (currentInfoWindow) {
+			currentInfoWindow.close();
+			currentInfoWindow = marker.info;
+		}
+		else {
+			currentInfoWindow = marker.info;
+		}
+		// Open current event's info window
+		marker.info.open(map,marker)
+
+		// Set observables with event info so that the performer info area in the View will be populated
+		self.currentEventName(currentEvent.eventTitle);
+		self.currentEventDate(currentEvent.eventDate);
+
+		self.currentVenueName(currentEvent.eventVenue.name);
+		self.currentVenueAddress(currentEvent.eventVenue.address);
 	}
 
 	/* When and info window is opened, currentInfoWindow will be set to it.
@@ -214,8 +248,6 @@ function MyViewModel() {
 				performer.performerImgURL = currentEvent.performers[j].image;
 				// Each performer on SeatGeek's database has a unique ID, which among other things, can be used with the Echo Nest API
 				performer.performerID = currentEvent.performers[j].id;
-				// Run Echo Nest API using Seat Geek's performer ID, to get additional performer information.
-				//performer.echoNestData = searchEchoNest(performer.performerID);
 				// Set the index of the event the performer belongs to, so that performer always has reference to the event.
 				performer.eventIndex = i;
 				// Set the index of the performer within the event, so that performer has reference to it's location within the event.
