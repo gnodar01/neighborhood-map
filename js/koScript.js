@@ -30,19 +30,37 @@ function MyViewModel() {
 	}
 
 	self.displayEvent = function() {
-		var eventObject = this;
+		var eventItem = this;
 
+		/* Checks if a result list item has been clicked or a marker item based on the
+		 existence of the performerName property, which only a result list item would have. */
 		if (this.performerName) {
-			displayListInfo(eventObject);
+			displayListInfo(eventItem);
 		}
 		else {
-			displayMarkerInfo(eventObject);
+			displayMarkerInfo(eventItem);
 		}
 	}
 
 	self.filterVenues = function() {
+		self.removeFilter();
 		var venue = self.venueVal();
-		var events = self.eventInfo();
+		var events = allEvents;
+
+		self.eventInfo("");
+		self.performers("");
+		// Removes each marker currently in observable.
+		setAllMap(null);
+		self.markers("");
+
+	}
+
+	self.removeFilter = function() {
+		self.eventInfo(allEvents);
+		self.performers(allPerformers);
+		self.markers(allMarkers);
+		setAllMap(null);
+		setAllMap(map);
 	}
 
 
@@ -63,10 +81,11 @@ function MyViewModel() {
 		allPerformers = [],
 		allMarkers = [];
 
-	var removeFilter = function() {
-		self.eventInfo = ko.observableArray(allEvents);
-		self.performers = ko.observableArray(allPerformers);
-		self.markers = ko.observableArray(allMarkers);
+	// Sets the map on all markers in the array.
+	var setAllMap = function(map) {
+	  for (var i = 0; i < self.markers().length; i++) {
+	    self.markers()[i].setMap(map);
+	  }
 	}
 
 	var displayListInfo = function(listItem) {
@@ -171,9 +190,6 @@ function MyViewModel() {
 				to the event it refers to */
 			eventMarker.eventIndex = i;
 
-			// Push to array of all markers
-			allMarkers.push(eventMarker);
-
 			// Event listner on each marker, which opens the corresponding info window, and displays event info in the View.
 			google.maps.event.addListener(eventMarker, 'click', function() {
 				// If there is already a marker that has had its info window opened, close the info window.
@@ -191,6 +207,9 @@ function MyViewModel() {
 				 has a way to account for the different structures of a marker object and a result list object. */
 				self.displayEvent.call(this);
 			});
+
+			// Push to array of all markers
+			allMarkers.push(eventMarker);
 		}
 		// Set to observable array, so that the when a list item in the view is clicked, the corresponding info window will open.
 		self.markers(allMarkers);

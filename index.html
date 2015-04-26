@@ -20,7 +20,8 @@
 		<div id="map-canvas"></div>
 		<div id="results">
 			<input type="text" data-bind="value: venueVal">
-			<button data-bind="click: filterVenues">GO!</button>
+			<button data-bind="click: filterVenues">Set Filter</button>
+			<button data-bind="click: removeFilter">Remove Filter</button>
 			<ul id="results-list" data-bind="foreach: performers">
 				<li data-bind="text: performerName, click: $parent.displayEvent, css: { 'highlight-event': eventIndex === $parent.currentEventIndex(), 'highlight-item': performerID === $parent.currentPerformerID() }"></li>
 			</ul>
