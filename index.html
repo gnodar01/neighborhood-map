@@ -13,13 +13,14 @@
 	<div id="location-input">
 			<input type="text" data-bind="value: cityVal">
 			<button data-bind="click: runSearch">GO!</button>
+			<button data-bind="click: runEcho"> Run Echo</button>
 			<p><span data-bind="text: cityVal"></span></p>
 	</div>
 	<div class="map-list">
 		<div id="map-canvas"></div>
 		<div id="results">
 			<ul id="results-list" data-bind="foreach: performers">
-				<li data-bind="text: performerName, click: $parent.displayEvent, css: { 'highlight-item': eventIndex === $parent.currentEventIndex() }"></li>
+				<li data-bind="text: performerName, click: $parent.displayEvent, css: { 'highlight-event': eventIndex === $parent.currentEventIndex(), 'highlight-item': performerID === $parent.currentPerformerID() }"></li>
 			</ul>
 		</div>
 	</div>

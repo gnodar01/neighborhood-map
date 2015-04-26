@@ -3,4 +3,5 @@ html, body, .map-list {margin: 0; padding: 0; height: 90%; position: relative;}
 #results {height: 100%; width: 50%; margin: 0; padding:0; position: absolute; right:0; top:0; overflow:auto;}
 #content_header {color: orange;}
 #performer-info {width: 50%; word-wrap: break-word;}
+.highlight-event {background-color: #FFEBCC;}
 .highlight-item {background-color: orange;}

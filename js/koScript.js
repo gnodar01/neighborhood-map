@@ -1,7 +1,7 @@
 function MyViewModel() {
 	var self = this;
 
-	self.cityVal = ko.observable();
+	self.cityVal = ko.observable("Orlando");
 	/* When the button is clicked, the city that was
 	inputted is sent to the google maps geocoder to get the
 	lat & long coordinates, which makes searching the SeatGeek
@@ -10,16 +10,23 @@ function MyViewModel() {
 		codeAddress(self.cityVal());
 	}
 
+	self.runEcho = function() {
+		searchEchoNest(35);
+	}
+
 	self.eventInfo = ko.observableArray();
 	self.performers = ko.observableArray();
 	self.markers = ko.observableArray();
 
+	self.currentPerformers = ko.observableArray();
 	self.currentEventName = ko.observable();
 	self.currentEventDate = ko.observable();
 	self.currentVenueName = ko.observable();
 	self.currentVenueAddress = ko.observable();
-	self.currentPerformers = ko.observableArray();
-	self.currentEventIndex = ko.observableArray();
+	self.currentPerformerID = ko.observable();
+	self.currentEventIndex = ko.observable();
+
+
 
 	self.displayEvent = function() {
 		/* Items in the result list and markers both have an eventIndex property refferencing their events.
@@ -28,14 +35,19 @@ function MyViewModel() {
 		 Both refer to their respective event's index value, but the 'this' value differs depending on how displayEvent()
 		 is triggered. */
 		var index = this.eventIndex;
+		// Get performer's unique ID
+		var performerID = this.performerID;
 
 		var marker = self.markers()[index];
 		var currentEvent = self.eventInfo()[index];
 
 		/* Result list items have a css data-bind that checks if its index equals the index currently
 		 in the currentEventIndex observable. If it is, all list items with the same index (all event performers) 
-		 have the highlighted-item class attached */
+		 have the highlighted-event class attached */
 		self.currentEventIndex(index);
+		/* Similar to above, each performer has a unique SeatGeek ID attached to it, which is passed to an observable
+		 when the list item is clicked. The css data-bind attaches a highlight-item class to list items with this ID. */
+		self.currentPerformerID(performerID);
 
 		// If an info window is open, close it and set it to current event's info window.
 		if (currentInfoWindow) {
@@ -57,6 +69,7 @@ function MyViewModel() {
 
 		// Empty currentPerformers Array
 		self.currentPerformers([]);
+		// Push all performers within the clicked event to currentPeformers observable.
 		for (var i = 0, perfLength = currentEvent.eventPerformers.length;  i < perfLength; i++) {
 			self.currentPerformers.push(currentEvent.eventPerformers[i]);
 		}
@@ -94,14 +107,14 @@ function MyViewModel() {
 			eventMarker = new google.maps.Marker({
 				map: map,
 				position: eventLatLng,
-				icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+				icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
 			});
 
 			// New info window for each event, with it's correspoinding contentString.
 			eventMarker.info = new google.maps.InfoWindow({
 				// HTML that provides markup for event information displayed in the google maps info window.
-				content: '<div id="content">' +
-				'<h1 id="content_header">' + eventData[i].eventTitle + '</h1>'
+				content: "<div id='content'>" +
+				"<h1 id='content_header'>" + eventData[i].eventTitle + "</h1>"
 			});
 			/* Create and set an eventIndex property on each marker, so that each marker always carries a reference
 				to the event it refers to */
@@ -133,12 +146,12 @@ function MyViewModel() {
 	var searchEchoNest = function(performerID) {
 		var echoKey = "2QHXFMFAW2PDSCYKW";
 		var perfID = performerID;
-		var query = "http://developer.echonest.com/api/v4/artist/hotttnesss?api_key=" + echoKey + "&id=seatgeek:artist:35&format=jsonp&callback=?";
-		$.getJSON(query, function (results) {
+		var enSearchQuery = "http://developer.echonest.com/api/v4/artist/hotttnesss?api_key=" + echoKey
+			enSearchQuery += "&id=seatgeek:artist:" + perfID
+			enSearchQuery += "&format=jsonp&callback=?";
+		$.getJSON(enSearchQuery, function (results) {
 			console.log(results);
 		});
-
-		return "donkey";
 	}
 
 	/* Parse the data response from the API call, and form an array of event objects
@@ -205,6 +218,8 @@ function MyViewModel() {
 				//performer.echoNestData = searchEchoNest(performer.performerID);
 				// Set the index of the event the performer belongs to, so that performer always has reference to the event.
 				performer.eventIndex = i;
+				// Set the index of the performer within the event, so that performer has reference to it's location within the event.
+				performer.performerIndex = j;
 				// Push each performer for an event to the event listing.
 				eventListing.eventPerformers.push(performer);
 				// Push each performer to observable array, so they appear as a list in view.
@@ -224,9 +239,6 @@ function MyViewModel() {
 		// Place marker on each event's location with performer information.
 		mapSGResults(self.eventInfo());
 		console.log(self.eventInfo())
-		// Test echo with single API call
-		var donkey = searchEchoNest(35);
-		console.log(donkey);
 	}
 
 	// Runs the SeatGeek api, and returns a list of 25 events near the city the user inputted (after geocoding).
@@ -236,7 +248,7 @@ function MyViewModel() {
 		that are returned by SeatGeek. Each taxonomy is looped through, with an added search query, and appended to the full query, which is then
 		appended to the full URL for the api call*/
 		var taxonomies = ['concert','music_festival','classical','classical_opera','classical_vocal','classical_orchestral_instrumental'],
-		taxonomySearchString = '&taxonomies.name=',
+		taxonomySearchString = "&taxonomies.name=",
 		fullTaxonomyQuery = "";
 
 		for (var i = 0, taxLength = taxonomies.length; i < taxLength; i++) {
@@ -244,9 +256,12 @@ function MyViewModel() {
 			fullTaxonomyQuery += taxonomySearchQuery;
 		}
 
-		var customURL = 'http://api.seatgeek.com/2/events?per_page=50' + fullTaxonomyQuery + '&lat=' + lat + '&lon=' + lng;
+		var sgSearchQuery = "http://api.seatgeek.com/2/events?per_page=50";
+			sgSearchQuery += fullTaxonomyQuery;
+			sgSearchQuery += "&lat=" + lat;
+			sgSearchQuery += "&lon=" + lng;
 
-		$.getJSON(customURL, function (data) {
+		$.getJSON(sgSearchQuery, function (data) {
 			parseSGResults(data);
 		});
 	}
@@ -269,11 +284,11 @@ function MyViewModel() {
 	      var marker = new google.maps.Marker({
 	        map: map,
 	        position: resultsLocation,
-	        icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+	        icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
 	      });
 	    } 
 	    else {
-	      alert('Geocode was not successful for the following reason: ' + status);
+	      alert("Geocode was not successful for the following reason: " + status);
 	    }
 
 	    searchSeatGeek(cityLat,cityLng);
