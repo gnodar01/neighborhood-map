@@ -4,16 +4,16 @@ function MyViewModel() {
 	self.cityVal = ko.observable("Orlando");
 	self.venueVal = ko.observable();
 
-	self.markers = ko.observableArray();
 	self.events = ko.observableArray();
+	self.markers = ko.observableArray();
 
-	self.currentPerformerName = ko.observable();
 	self.currentEventName = ko.observable();
 	self.currentEventDate = ko.observable();
 	self.currentVenueName = ko.observable();
-	self.currentVenueAddress = ko.observable();
-	self.currentPerformerID = ko.observable();
 	self.currentEventIndex = ko.observable();
+	self.currentPerformerID = ko.observable();
+	self.currentVenueAddress = ko.observable();
+	self.currentPerformerName = ko.observable();
 
 	/* When the button is clicked, the city that was
 	inputted is sent to the google maps geocoder to get the
@@ -70,7 +70,6 @@ function MyViewModel() {
 		self.currentPerformerName(currentPerformer.performerName);
 	}
 
-	self.donkey = [];
 	self.filterVenues = function() {
 		// In case there is another filter, it should be removed before re-filtering
 		self.removeFilter();
@@ -114,6 +113,10 @@ function MyViewModel() {
 	/*-------------------PRIVATE-------------------*/
 
 	var geocoder, map;
+	// When and info window is opened, currentInfoWindow will be set to it.
+	var currentInfoWindow;
+	var allEvents = [], allMarkers = [];
+
 	var initialize = function () {
 	  geocoder = new google.maps.Geocoder();
 	  var latlng = new google.maps.LatLng(28.4158, -81.2989);
@@ -124,8 +127,6 @@ function MyViewModel() {
 	  map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 	}
 
-	var allEvents = [], allMarkers = [];
-
 	// Sets the map on all markers in the array.
 	var setAllMap = function(map) {
 	  for (var i = 0; i < self.markers().length; i++) {
@@ -133,9 +134,18 @@ function MyViewModel() {
 	  }
 	}
 
-	/* When and info window is opened, currentInfoWindow will be set to it.
-	It needs to be outside of the mapSGResults function so that the View may access it.*/
-	var currentInfoWindow;
+	var searchEchoNest = function(performerID) {
+		var enKey = '2QHXFMFAW2PDSCYKW';
+		var perfID = performerID;
+		var enSearchQuery = "http://developer.echonest.com/api/v4/artist/genres?api_key=" + enKey
+			enSearchQuery += "&id=seatgeek:artist:" + perfID
+			enSearchQuery += "&format=jsonp&callback=?";
+
+		$.getJSON(enSearchQuery, function (results) {
+			console.log(results);
+		});
+	}
+
 	// Make marker and corresponding info window for each event location.
 	var mapSGResults = function(eventData) {
 		var eventMarker, contentString, eventLat, eventLng, eventLatLng;
@@ -164,32 +174,8 @@ function MyViewModel() {
 			// Push to array of all markers
 			allMarkers.push(eventMarker);
 		}
-		// Set to observable array, so that the when a list item in the view is clicked, the corresponding info window will open.
+		// Set to observable array for filtering.
 		self.markers(allMarkers);
-	}
-
-	var searchEchoNest = function(performerID) {
-		var echoKey = "2QHXFMFAW2PDSCYKW";
-		$.post('http://developer.echonest.com/api/v4/tasteprofile/creat?callback=?',
-		{
-			api_key: echoKey,
-			format: 'jsonp',
-			type: 'artist',
-			callback: 'pstCall',
-			name: 'test_artist_tasteprofile'
-		},
-		function (resutls) {
-			console.log(reuslts);
-		});
-
-
-		/*var perfID = performerID;
-		var enSearchQuery = "http://developer.echonest.com/api/v4/artist/hotttnesss?api_key=" + echoKey
-			enSearchQuery += "&id=seatgeek:artist:" + perfID
-			enSearchQuery += "&format=jsonp&callback=?";
-		$.getJSON(enSearchQuery, function (results) {
-			console.log(results);
-		}); */
 	}
 
 	/* Parse the data response from the API call, and form an array of event objects
@@ -276,7 +262,7 @@ function MyViewModel() {
 		self.events(allEvents);
 
 		//-----------------------------//
-		console.log(allEvents);
+			console.log(allEvents);
 		//-----------------------------//
 
 
