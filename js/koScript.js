@@ -31,14 +31,43 @@ function MyViewModel() {
 	self.displayEvent = function() {
 		var eventItem = this;
 
-		/* Checks if a result list item has been clicked or a marker item based on the
-		 existence of the performerName property, which only a result list item would have. */
-		if (this.performerName) {
-			displayListInfo(eventItem);
+		var index = this.eventIndex;
+		// Set perfomer's location in eventPerformer array within event object.
+		var performerIndex = this.performerIndex
+		// Get performer's unique ID
+		var performerID = this.performerID;
+
+		var marker = allMarkers[index];
+		var currentEvent = allEvents[index];
+		var currentPerformer = currentEvent.eventPerformers[performerIndex];
+
+		/* Result list items have a css data-bind that checks if its index equals the index currently
+		 in the currentEventIndex observable. If it is, all list items with the same index (all event performers) 
+		 have the highlighted-event class attached */
+		self.currentEventIndex(index);
+		/* Similar to above, each performer has a unique SeatGeek ID attached to it, which is passed to an observable
+		 when the list item is clicked. The css data-bind attaches a highlight-item class to list items with this ID. */
+		self.currentPerformerID(performerID);
+
+		// If an info window is open, close it and set it to current event's info window.
+		if (currentInfoWindow) {
+			currentInfoWindow.close();
+			currentInfoWindow = marker.info;
 		}
 		else {
-			displayMarkerInfo(eventItem);
+			currentInfoWindow = marker.info;
 		}
+		// Open current event's info window
+		marker.info.open(map,marker)
+
+		// Set observables with event info so that the performer info area in the View will be populated
+		self.currentEventName(currentEvent.eventTitle);
+		self.currentEventDate(currentEvent.eventDate);
+
+		self.currentVenueName(currentEvent.eventVenue.name);
+		self.currentVenueAddress(currentEvent.eventVenue.address);
+
+		self.currentPerformerName(currentPerformer.performerName);
 	}
 
 	self.donkey = [];
@@ -104,77 +133,6 @@ function MyViewModel() {
 	  }
 	}
 
-	var displayListInfo = function(listItem) {
-		var index = listItem.eventIndex;
-		// Set perfomer's location in eventPerformer array within event object.
-		var performerIndex = listItem.performerIndex
-		// Get performer's unique ID
-		var performerID = listItem.performerID;
-
-		var marker = allMarkers[index];
-		var currentEvent = allEvents[index];
-		var currentPerformer = currentEvent.eventPerformers[performerIndex];
-
-		/* Result list items have a css data-bind that checks if its index equals the index currently
-		 in the currentEventIndex observable. If it is, all list items with the same index (all event performers) 
-		 have the highlighted-event class attached */
-		self.currentEventIndex(index);
-		/* Similar to above, each performer has a unique SeatGeek ID attached to it, which is passed to an observable
-		 when the list item is clicked. The css data-bind attaches a highlight-item class to list items with this ID. */
-		self.currentPerformerID(performerID);
-
-		// If an info window is open, close it and set it to current event's info window.
-		if (currentInfoWindow) {
-			currentInfoWindow.close();
-			currentInfoWindow = marker.info;
-		}
-		else {
-			currentInfoWindow = marker.info;
-		}
-		// Open current event's info window
-		marker.info.open(map,marker)
-
-		// Set observables with event info so that the performer info area in the View will be populated
-		self.currentEventName(currentEvent.eventTitle);
-		self.currentEventDate(currentEvent.eventDate);
-
-		self.currentVenueName(currentEvent.eventVenue.name);
-		self.currentVenueAddress(currentEvent.eventVenue.address);
-
-		self.currentPerformerName(currentPerformer.performerName);
-
-	}
-
-	var displayMarkerInfo = function(markerEvent) {
-		var index = markerEvent.eventIndex;
-		var marker = allMarkers[index];
-		var currentEvent = allEvents[index];
-
-		self.currentEventIndex(index);
-		/* When marker is selected, only the event is selected, not a specific performer,
-		 so the performer name and ID observables are emptied. */
-		self.currentPerformerID("");
-		self.currentPerformerName("");
-
-		// If an info window is open, close it and set it to current event's info window.
-		if (currentInfoWindow) {
-			currentInfoWindow.close();
-			currentInfoWindow = marker.info;
-		}
-		else {
-			currentInfoWindow = marker.info;
-		}
-		// Open current event's info window
-		marker.info.open(map,marker)
-
-		// Set observables with event info so that the performer info area in the View will be populated
-		self.currentEventName(currentEvent.eventTitle);
-		self.currentEventDate(currentEvent.eventDate);
-
-		self.currentVenueName(currentEvent.eventVenue.name);
-		self.currentVenueAddress(currentEvent.eventVenue.address);
-	}
-
 	/* When and info window is opened, currentInfoWindow will be set to it.
 	It needs to be outside of the mapSGResults function so that the View may access it.*/
 	var currentInfoWindow;
@@ -201,27 +159,6 @@ function MyViewModel() {
 				// HTML that provides markup for event information displayed in the google maps info window.
 				content: "<div id='content'>" +
 				"<h1 id='content_header'>" + eventData[i].eventTitle + "</h1>"
-			});
-			/* Create and set an eventIndex property on each marker, so that each marker always carries a reference
-				to the event it refers to */
-			eventMarker.eventIndex = i;
-
-			// Event listner on each marker, which opens the corresponding info window, and displays event info in the View.
-			google.maps.event.addListener(eventMarker, 'click', function() {
-				// If there is already a marker that has had its info window opened, close the info window.
-				if (currentInfoWindow) {
-					currentInfoWindow.close();
-				}
-				/* Set currentInfoWindow to the info window of the marker that has been clicked on,
-				so that it can be closed when the next marker's info window is opened.*/
-				currentInfoWindow = this.info;
-				// Open the info window on the marker that has been clicked on.
-				this.info.open(map,this);
-
-				/* displayEvent is a 'data-bind'ed function in the HTML. We call it on 'this' (the clicked marker)
-				 to simulate the effect of clicking a list item in the View's result list. The displayEvent function
-				 has a way to account for the different structures of a marker object and a result list object. */
-				self.displayEvent.call(this);
 			});
 
 			// Push to array of all markers
