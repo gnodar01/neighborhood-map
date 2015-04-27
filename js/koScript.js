@@ -18,14 +18,19 @@ function MyViewModel() {
 	/* When the button is clicked, the city that was
 	inputted is sent to the google maps geocoder to get the
 	lat & long coordinates, which makes searching the SeatGeek
-	more accurate than simply searching by city*/
+	more accurate than simply searching by city. */
 	self.runSearch = function() {
 		var city = self.cityVal();
+
+		allEvents = [];
+		allMarkers = [];
+
 		codeAddress(city);
 	}
 
 	self.runEcho = function() {
-		searchEchoNest(35);
+		artistID = self.currentPerformerID();
+		searchEchoNest(artistID);
 	}
 
 	self.displayEvent = function() {
@@ -43,7 +48,7 @@ function MyViewModel() {
 
 		/* Result list items have a css data-bind that checks if its index equals the index currently
 		 in the currentEventIndex observable. If it is, all list items with the same index (all event performers) 
-		 have the highlighted-event class attached */
+		 have the highlighted-event class attached. */
 		self.currentEventIndex(index);
 		/* Similar to above, each performer has a unique SeatGeek ID attached to it, which is passed to an observable
 		 when the list item is clicked. The css data-bind attaches a highlight-item class to list items with this ID. */
@@ -57,12 +62,12 @@ function MyViewModel() {
 		else {
 			currentInfoWindow = marker.info;
 		}
-		// Open current event's info window
+		// Open current event's info window.
 		marker.info.open(map,marker)
 
-		// Set observables with event info so that the performer info area in the View will be populated
-		self.currentEventName(currentEvent.eventTitle);
 		self.currentEventDate(currentEvent.eventDate);
+		// Set observables with event info so that the performer info area in the View will be populated.
+		self.currentEventName(currentEvent.eventTitle);
 
 		self.currentVenueName(currentEvent.eventVenue.name);
 		self.currentVenueAddress(currentEvent.eventVenue.address);
@@ -71,33 +76,33 @@ function MyViewModel() {
 	}
 
 	self.filterVenues = function() {
-		// In case there is another filter, it should be removed before re-filtering
+		// In case there is another filter, it should be removed before re-filtering.
 		self.removeFilter();
 
-		// Get the value inputted in the filter search, and set to all lower cas letters
+		// Get the value inputted in the filter search, and set to all lower cas letters.
 		var venueFilter = self.venueVal().toLowerCase();
 
 		var events = allEvents, markers = allMarkers;
 
-		// Empty out all events currently in events observable
+		// Empty out all events currently in events observable.
 		self.events([]);
 		// Removes each marker currently in markers observable.
 		setAllMap(null);
 		self.markers([]);
 
-		// Go through all events, and add any that fit the filter search value to observables
+		// Go through all events, and add any that fit the filter search value to observables.
 		var currentVenue, currentVenueName;
 		for (var i = 0, eventsLength = events.length; i < eventsLength; i++) {
 			currentVenue = events[i];
-			// Set venue names to lower case, to campare to filter search value (also set to lowercase)
+			// Set venue names to lower case, to campare to filter search value (also set to lowercase).
 			currentVenueName = currentVenue.eventVenue.name.toLowerCase();
-			// If the filter serach value matches any of the venue names, push the event and it's map marker to observables
+			// If the filter serach value matches any of the venue names, push the event and it's map marker to observables.
 			if (venueFilter === currentVenueName) {
 				self.events.push(currentVenue);
 				self.markers.push(markers[i]);
 			}
 		}
-		// Set all markers in observable to the map
+		// Set all markers in observable to the map.
 		setAllMap(map);
 	}
 
@@ -115,7 +120,7 @@ function MyViewModel() {
 	var geocoder, map;
 	// When and info window is opened, currentInfoWindow will be set to it.
 	var currentInfoWindow;
-	var allEvents = [], allMarkers = [];
+	var allEvents, allMarkers;
 
 	var initialize = function () {
 	  geocoder = new google.maps.Geocoder();
@@ -171,7 +176,7 @@ function MyViewModel() {
 				"<h1 id='content_header'>" + eventData[i].eventTitle + "</h1>"
 			});
 
-			// Push to array of all markers
+			// Push to array of all markers.
 			allMarkers.push(eventMarker);
 		}
 		// Set to observable array for filtering.
@@ -179,12 +184,12 @@ function MyViewModel() {
 	}
 
 	/* Parse the data response from the API call, and form an array of event objects
-		with relevant data, which will be displayed on the google map.*/
+		with relevant data, which will be displayed on the google map. */
 	var parseSGResults = function(data) {
 		for (var i = 0, numEvents = data.events.length; i < numEvents; i++) {
 			var currentEvent = data.events[i], currentVenue = currentEvent.venue;
 
-			// IIFE which takes in the ugly standardized date format returned by SeatGeek, and makes it easily readable
+			// IIFE which takes in the ugly standardized date format returned by SeatGeek, and makes it easily readable.
 			// SeatGeeks returned date format is: yyyy-mm-ddThh:mm:ss
 			var currentDate = (function(dateToParse) {
 				// Split inputted date into two arrays; 0: Date, 1: Time
@@ -194,9 +199,9 @@ function MyViewModel() {
 				// Split time into three arrays; 0: hh, 1: mm, 2: ss
 				var time = dateTime[1].split(':');
 
-				// Translate the hour string into integer (so that it rids 0s in front of single digit times e.g. 3:00 vs 03:00)
+				// Translate the hour string into integer (so that it rids 0s in front of single digit times e.g. 3:00 vs 03:00).
 				time[0] = parseInt(time[0]);
-				// Translate from 24 hour time to 12 hour time
+				// Translate from 24 hour time to 12 hour time.
 				if (time[0] >= 13) {
 					time[0] -= 12;
 					time[3] = "p.m.";
@@ -237,7 +242,7 @@ function MyViewModel() {
 				performer = {};
 				performer.performerName = currentEvent.performers[j].name;
 				performer.performerImgURL = currentEvent.performers[j].image;
-				// Each performer on SeatGeek's database has a unique ID, which among other things, can be used with the Echo Nest API
+				// Each performer on SeatGeek's database has a unique ID, which among other things, can be used with the Echo Nest API.
 				performer.performerID = currentEvent.performers[j].id;
 				// Set the index of the event the performer belongs to, so that performer always has reference to the event.
 				performer.eventIndex = i;
@@ -252,9 +257,8 @@ function MyViewModel() {
 				address: currentVenue.address + ", " + currentVenue.display_location + ", " + currentVenue.postal_code,
 				lat: currentVenue.location.lat,
 				lng: currentVenue.location.lon,
-				eventIndex: i
 			}
-			// Push to all events array which holds each event listing returned from SeatGeek
+			// Push to all events array which holds each event listing returned from SeatGeek.
 			allEvents.push(eventListing);
 		}
 		// Place marker on each event's location with performer information.
@@ -273,7 +277,7 @@ function MyViewModel() {
 		/* SeatGeeks api has a list of taxonomies you can search through. These are event types like races, dance events, plays, concerts, etc.
 		Only music related events are needed so it must be specified in the api call. The taxonomies array includes all music related taxonomies
 		that are returned by SeatGeek. Each taxonomy is looped through, with an added search query, and appended to the full query, which is then
-		appended to the full URL for the api call*/
+		appended to the full URL for the api call. */
 		var taxonomies = ['concert','music_festival','classical','classical_opera','classical_vocal','classical_orchestral_instrumental'],
 		taxonomySearchString = "&taxonomies.name=",
 		fullTaxonomyQuery = "";
@@ -306,7 +310,7 @@ function MyViewModel() {
 	      /* Centers and sets a marker in the map on the geocoded address inputed by the user.
 	      results[0] is set because the geocoded address may contain more than one possible 
 	      result. The first result has the highest probability of being correct, and there
-	      is usually no need to use the others.*/
+	      is usually no need to use the others. */
 	      map.setCenter(resultsLocation);
 	      var marker = new google.maps.Marker({
 	        map: map,
@@ -326,5 +330,4 @@ function MyViewModel() {
 }
 
 var vm = new MyViewModel();
-
 ko.applyBindings(vm);
