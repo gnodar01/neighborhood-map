@@ -4,9 +4,9 @@ function MyViewModel() {
 	self.cityVal = ko.observable("Orlando");
 	self.venueVal = ko.observable();
 
-	self.eventInfo = ko.observableArray();
 	self.performers = ko.observableArray();
 	self.markers = ko.observableArray();
+	self.venues = ko.observableArray();
 
 	self.currentPerformerName = ko.observable();
 	self.currentEventName = ko.observable();
@@ -43,22 +43,34 @@ function MyViewModel() {
 	}
 
 	self.filterVenues = function() {
+		// In case there is another filter, it should be removed before re-filtering
 		self.removeFilter();
-		var venue = self.venueVal();
+
+		var venueFilter = self.venueVal().toLowerCase();
 		var events = allEvents;
 
-		self.eventInfo("");
 		self.performers("");
+		self.venues("");
 		// Removes each marker currently in observable.
 		setAllMap(null);
 		self.markers("");
 
+		var currentVenue;
+		for (var i = 0, eventsLength = events.length; i < eventsLength; i++) {
+			currentVenue = events[i].eventVenue.name.toLowerCase();
+			if (venueFilter === currentVenue) {
+				console.log("get er done")
+			}
+
+		}
+
 	}
 
 	self.removeFilter = function() {
-		self.eventInfo(allEvents);
 		self.performers(allPerformers);
+		self.venues(allVenues);
 		self.markers(allMarkers);
+		// Remove all markers before repopulating to avoid doubling up on markers.
 		setAllMap(null);
 		setAllMap(map);
 	}
@@ -80,6 +92,7 @@ function MyViewModel() {
 	var allEvents = [],
 		allPerformers = [],
 		allMarkers = [];
+		allVenues = [];
 
 	// Sets the map on all markers in the array.
 	var setAllMap = function(map) {
@@ -95,8 +108,8 @@ function MyViewModel() {
 		// Get performer's unique ID
 		var performerID = listItem.performerID;
 
-		var marker = self.markers()[index];
-		var currentEvent = self.eventInfo()[index];
+		var marker = allMarkers[index];
+		var currentEvent = allEvents[index];
 		var currentPerformer = currentEvent.eventPerformers[performerIndex];
 
 		/* Result list items have a css data-bind that checks if its index equals the index currently
@@ -131,8 +144,8 @@ function MyViewModel() {
 
 	var displayMarkerInfo = function(markerEvent) {
 		var index = markerEvent.eventIndex;
-		var marker = self.markers()[index];
-		var currentEvent = self.eventInfo()[index];
+		var marker = allMarkers[index];
+		var currentEvent = allEvents[index];
 
 		self.currentEventIndex(index);
 		/* When marker is selected, only the event is selected, not a specific performer,
@@ -217,13 +230,26 @@ function MyViewModel() {
 
 	var searchEchoNest = function(performerID) {
 		var echoKey = "2QHXFMFAW2PDSCYKW";
-		var perfID = performerID;
+		$.post('http://developer.echonest.com/api/v4/tasteprofile/creat?callback=?',
+		{
+			api_key: echoKey,
+			format: 'jsonp',
+			type: 'artist',
+			callback: 'pstCall',
+			name: 'test_artist_tasteprofile'
+		},
+		function (resutls) {
+			console.log(reuslts);
+		});
+
+
+		/*var perfID = performerID;
 		var enSearchQuery = "http://developer.echonest.com/api/v4/artist/hotttnesss?api_key=" + echoKey
 			enSearchQuery += "&id=seatgeek:artist:" + perfID
 			enSearchQuery += "&format=jsonp&callback=?";
 		$.getJSON(enSearchQuery, function (results) {
 			console.log(results);
-		});
+		}); */
 	}
 
 	/* Parse the data response from the API call, and form an array of event objects
@@ -260,11 +286,11 @@ function MyViewModel() {
 				return parsedDateString;
 			}(currentEvent.datetime_local));
 
-			var eventListing = {};
-
-			eventListing.eventTitle = currentEvent.title;
-			eventListing.eventType = currentEvent.type;
-			eventListing.eventURL = currentEvent.url;
+			var eventListing = {
+				eventTitle: currentEvent.title,
+				eventType: currentEvent.type,
+				eventURL: currentEvent.url
+			};
 
 			/* If the event date is flagged true by SeatGeek, then the show date is an estimate;
 				if the event time is flagged true by SeatGeek, then the show date is correct, but the time
@@ -280,8 +306,9 @@ function MyViewModel() {
 			}
 			
 			eventListing.eventPerformers = [];
+			var performer;
 			for (var j = 0, perfLength = currentEvent.performers.length; j < perfLength; j++) {
-				var performer = {};
+				performer = {};
 				performer.performerName = currentEvent.performers[j].name;
 				performer.performerImgURL = currentEvent.performers[j].image;
 				// Each performer on SeatGeek's database has a unique ID, which among other things, can be used with the Echo Nest API
@@ -302,17 +329,27 @@ function MyViewModel() {
 				name: currentVenue.name,
 				address: currentVenue.address + ", " + currentVenue.display_location + ", " + currentVenue.postal_code,
 				lat: currentVenue.location.lat,
-				lng: currentVenue.location.lon
+				lng: currentVenue.location.lon,
+				eventIndex: i
 			}
+			allVenues.push(eventListing.eventVenue);
 
 			// Push to all events array which holds each event listing returned from SeatGeek
 			allEvents.push(eventListing);
 		}
-		// Set to observable array so that event info can be displayed when a list item in the view is clicked.
-		self.eventInfo(allEvents);
+		// Set to observable array.
+		self.venues(allVenues);
 		// Place marker on each event's location with performer information.
-		mapSGResults(self.eventInfo());
-		console.log(self.eventInfo())
+		mapSGResults(allEvents);
+
+
+		//-----------------------------//
+		console.log(self.venues())
+		console.log(self.performers())
+		console.log(allEvents);
+		//-----------------------------//
+
+
 	}
 
 	// Runs the SeatGeek api, and returns a list of 25 events near the city the user inputted (after geocoding).
