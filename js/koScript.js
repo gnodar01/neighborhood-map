@@ -123,20 +123,20 @@ function MyViewModel() {
 	var allEvents, allMarkers;
 
 	var initialize = function () {
-	  geocoder = new google.maps.Geocoder();
-	  var latlng = new google.maps.LatLng(28.4158, -81.2989);
-	  var mapOptions = {
-	  	zoom: 8,
-	    center: latlng
-	  }
-	  map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+		geocoder = new google.maps.Geocoder();
+		var latlng = new google.maps.LatLng(28.4158, -81.2989);
+		var mapOptions = {
+			zoom: 8,
+		center: latlng
+		}
+		map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 	}
 
 	// Sets the map on all markers in the array.
 	var setAllMap = function(map) {
-	  for (var i = 0; i < self.markers().length; i++) {
-	    self.markers()[i].setMap(map);
-	  }
+		for (var i = 0; i < self.markers().length; i++) {
+			self.markers()[i].setMap(map);
+		}
 	}
 
 	var searchEchoNest = function(performerID) {
@@ -300,30 +300,30 @@ function MyViewModel() {
 	/* Takes city, geocodes it, gets the lat & lng coords, sets a marker on that location in the map,
 	 and runs the search SeatGeek function on those coords. */
 	var codeAddress = function (city) {
-	  geocoder.geocode( {'address': city}, function(results, status) {
-	    if (status == google.maps.GeocoderStatus.OK) {
-	      resultsLocation = results[0].geometry.location
-	      
-	      cityLat = resultsLocation.lat();
-	      cityLng = resultsLocation.lng();
+		geocoder.geocode( {'address': city}, function(results, status) {
+		    if (status === google.maps.GeocoderStatus.OK) {
+		    	resultsLocation = results[0].geometry.location
+		      
+		    	cityLat = resultsLocation.lat();
+		    	cityLng = resultsLocation.lng();
 
-	      /* Centers and sets a marker in the map on the geocoded address inputed by the user.
-	      results[0] is set because the geocoded address may contain more than one possible 
-	      result. The first result has the highest probability of being correct, and there
-	      is usually no need to use the others. */
-	      map.setCenter(resultsLocation);
-	      var marker = new google.maps.Marker({
-	        map: map,
-	        position: resultsLocation,
-	        icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-	      });
-	    } 
-	    else {
-	      alert("Geocode was not successful for the following reason: " + status);
-	    }
+				/* Centers and sets a marker in the map on the geocoded address inputed by the user.
+				 results[0] is set because the geocoded address may contain more than one possible 
+				 result. The first result has the highest probability of being correct, and there
+				 is usually no need to use the others. */
+				map.setCenter(resultsLocation);
+				var marker = new google.maps.Marker({
+					map: map,
+					position: resultsLocation,
+					icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+				});
+		    } 
+			else {
+				alert("Geocode was not successful for the following reason: " + status);
+			}
 
-	    searchSeatGeek(cityLat,cityLng);
-	  });
+			searchSeatGeek(cityLat,cityLng);
+		});
 	}
 
 	google.maps.event.addDomListener(window, 'load', initialize);
