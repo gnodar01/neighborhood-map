@@ -41,27 +41,36 @@ function MyViewModel() {
 		}
 	}
 
+	self.donkey = [];
 	self.filterVenues = function() {
 		// In case there is another filter, it should be removed before re-filtering
 		self.removeFilter();
 
+		// Get the value inputted in the filter search, and set to all lower cas letters
 		var venueFilter = self.venueVal().toLowerCase();
-		var events = allEvents;
 
-		self.events("");
-		// Removes each marker currently in observable.
+		var events = allEvents, markers = allMarkers;
+
+		// Empty out all events currently in events observable
+		self.events([]);
+		// Removes each marker currently in markers observable.
 		setAllMap(null);
-		self.markers("");
+		self.markers([]);
 
-		var currentVenue;
+		// Go through all events, and add any that fit the filter search value to observables
+		var currentVenue, currentVenueName;
 		for (var i = 0, eventsLength = events.length; i < eventsLength; i++) {
-			currentVenue = events[i].eventVenue.name.toLowerCase();
-			if (venueFilter === currentVenue) {
-				console.log("get er done")
+			currentVenue = events[i];
+			// Set venue names to lower case, to campare to filter search value (also set to lowercase)
+			currentVenueName = currentVenue.eventVenue.name.toLowerCase();
+			// If the filter serach value matches any of the venue names, push the event and it's map marker to observables
+			if (venueFilter === currentVenueName) {
+				self.events.push(currentVenue);
+				self.markers.push(markers[i]);
 			}
-
 		}
-
+		// Set all markers in observable to the map
+		setAllMap(map);
 	}
 
 	self.removeFilter = function() {
