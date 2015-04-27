@@ -29,7 +29,6 @@ function MyViewModel() {
 	}
 
 	self.displayEvent = function() {
-		console.log(this)
 		var eventItem = this;
 
 		/* Checks if a result list item has been clicked or a marker item based on the
@@ -49,6 +48,7 @@ function MyViewModel() {
 		var venueFilter = self.venueVal().toLowerCase();
 		var events = allEvents;
 
+		self.events("");
 		// Removes each marker currently in observable.
 		setAllMap(null);
 		self.markers("");
@@ -65,6 +65,7 @@ function MyViewModel() {
 	}
 
 	self.removeFilter = function() {
+		self.events(allEvents);
 		self.markers(allMarkers);
 		// Remove all markers before repopulating to avoid doubling up on markers.
 		setAllMap(null);
