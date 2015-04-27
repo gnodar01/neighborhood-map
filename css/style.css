@@ -4,4 +4,4 @@ html, body, .map-list {margin: 0; padding: 0; height: 90%; position: relative;}
 #content_header {color: orange;}
 #performer-info {width: 50%; word-wrap: break-word;}
 .highlight-event {background-color: #FFEBCC;}
-.highlight-item {background-color: orange;}
+.highlight-performer {background-color: orange;}

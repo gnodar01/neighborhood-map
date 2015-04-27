@@ -4,9 +4,8 @@ function MyViewModel() {
 	self.cityVal = ko.observable("Orlando");
 	self.venueVal = ko.observable();
 
-	self.performers = ko.observableArray();
 	self.markers = ko.observableArray();
-	self.venues = ko.observableArray();
+	self.events = ko.observableArray();
 
 	self.currentPerformerName = ko.observable();
 	self.currentEventName = ko.observable();
@@ -30,6 +29,7 @@ function MyViewModel() {
 	}
 
 	self.displayEvent = function() {
+		console.log(this)
 		var eventItem = this;
 
 		/* Checks if a result list item has been clicked or a marker item based on the
@@ -49,8 +49,6 @@ function MyViewModel() {
 		var venueFilter = self.venueVal().toLowerCase();
 		var events = allEvents;
 
-		self.performers("");
-		self.venues("");
 		// Removes each marker currently in observable.
 		setAllMap(null);
 		self.markers("");
@@ -67,8 +65,6 @@ function MyViewModel() {
 	}
 
 	self.removeFilter = function() {
-		self.performers(allPerformers);
-		self.venues(allVenues);
 		self.markers(allMarkers);
 		// Remove all markers before repopulating to avoid doubling up on markers.
 		setAllMap(null);
@@ -89,10 +85,7 @@ function MyViewModel() {
 	  map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 	}
 
-	var allEvents = [],
-		allPerformers = [],
-		allMarkers = [];
-		allVenues = [];
+	var allEvents = [], allMarkers = [];
 
 	// Sets the map on all markers in the array.
 	var setAllMap = function(map) {
@@ -319,11 +312,7 @@ function MyViewModel() {
 				performer.performerIndex = j;
 				// Push each performer for an event to the event listing.
 				eventListing.eventPerformers.push(performer);
-				// Push to array which holds all performers
-				allPerformers.push(performer);
 			}
-			// Set all performers to observable array, so they appear as a list in view.
-			self.performers(allPerformers);
 
 			eventListing.eventVenue = {
 				name: currentVenue.name,
@@ -332,20 +321,14 @@ function MyViewModel() {
 				lng: currentVenue.location.lon,
 				eventIndex: i
 			}
-			allVenues.push(eventListing.eventVenue);
-
 			// Push to all events array which holds each event listing returned from SeatGeek
 			allEvents.push(eventListing);
 		}
-		// Set to observable array.
-		self.venues(allVenues);
 		// Place marker on each event's location with performer information.
 		mapSGResults(allEvents);
-
+		self.events(allEvents);
 
 		//-----------------------------//
-		console.log(self.venues())
-		console.log(self.performers())
 		console.log(allEvents);
 		//-----------------------------//
 
