@@ -29,8 +29,11 @@ function MyViewModel() {
 	}
 
 	self.runEcho = function() {
+		searchEchoNest();
+	}
+	self.testEcho = function() {
 		artistID = self.currentPerformerID();
-		searchEchoNest(35);
+		testEchoNest(35);
 	}
 
 	self.displayEvent = function() {
@@ -203,8 +206,10 @@ function MyViewModel() {
 		else {
 			createTasteProfile();
 		}
+	}
 
-		/*var enKey = '2QHXFMFAW2PDSCYKW';
+	var testEchoNest = function(performerID) {
+		var enKey = '2QHXFMFAW2PDSCYKW';
 		var perfID = performerID;
 		var enSearchQuery = "http://developer.echonest.com/api/v4/artist/genres?api_key=" + enKey
 			enSearchQuery += "&id=seatgeek:artist:" + perfID
@@ -212,7 +217,7 @@ function MyViewModel() {
 
 		$.getJSON(enSearchQuery, function (results) {
 			console.log(results);
-		});*/
+		});
 	}
 
 	// Make marker and corresponding info window for each event location.
