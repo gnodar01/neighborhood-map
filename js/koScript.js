@@ -30,7 +30,7 @@ function MyViewModel() {
 
 	self.runEcho = function() {
 		artistID = self.currentPerformerID();
-		searchEchoNest(artistID);
+		searchEchoNest(35);
 	}
 
 	self.displayEvent = function() {
@@ -121,6 +121,17 @@ function MyViewModel() {
 	// When and info window is opened, currentInfoWindow will be set to it.
 	var currentInfoWindow;
 	var allEvents, allMarkers;
+	/* When the EchoNest API function runs, it creates what's called a taste profile.
+	  Before the function is run again, the taste profile must be deleted.
+	  The variable tasteProfileExists, is set to true when the EchoNest API call is first made.
+	  When the EchoNest API call is made again, it checks if tasteProfileExists is true, and if
+	  it is, it deletes the current taste profile, before making a new one. */
+	var tasteProfileExists = false;
+	/* When the EchoNest API runs and a taste profile is created, it returns a taste profile ID.
+	  This ID is needed to modify the taste profile, and to delete it. It must be kept outside of
+	  the function, otherwise after the function runs the first time and clears the stack, the
+	  enTasteProfileID variable will lose whatever value it is currently holding. */
+	var enTasteProfileID;
 
 	var initialize = function () {
 		geocoder = new google.maps.Geocoder();
@@ -140,7 +151,60 @@ function MyViewModel() {
 	}
 
 	var searchEchoNest = function(performerID) {
-		var enKey = '2QHXFMFAW2PDSCYKW';
+		var performerID = performerID;
+
+		var enKey = "2QHXFMFAW2PDSCYKW";
+		
+		var enDeleteTPQuery = "http://developer.echonest.com/api/v4/tasteprofile/delete";
+		var enCreateTPQuery = "http://developer.echonest.com/api/v4/tasteprofile/create";
+
+		var enDeleteTPData = {
+			api_key: enKey,
+			id: enTasteProfileID,
+			format: "json"
+		}
+		var enCreateTPData = {
+			api_key: enKey,
+			type: "artist",
+			name: "test_artist_tasteprofile",
+			format: "json"
+		}
+
+		var deleteTasteProfile = function() {
+			console.log("run delete call")
+			$.post(enDeleteTPQuery, enDeleteTPData, function (results) {
+				console.log("deleted");
+				console.log(results);
+				createTasteProfile();
+			});
+		}
+
+		var createTasteProfile = function() {
+			console.log("run create call")
+			$.post(enCreateTPQuery, enCreateTPData, function (results) {
+				tasteProfileExists = true;
+				if (results.response.status.code === 0) {
+					console.log("created")
+					enTasteProfileID = results.response.id;
+				}
+				else if (results.response.status.code ===5) {
+					console.log("already exists");
+					enTasteProfileID = results.response.status.id;
+				}
+				console.log(enTasteProfileID);
+				console.log(results);
+			});
+			
+		}
+
+		if (tasteProfileExists) {
+			deleteTasteProfile();
+		}
+		else {
+			createTasteProfile();
+		}
+
+		/*var enKey = '2QHXFMFAW2PDSCYKW';
 		var perfID = performerID;
 		var enSearchQuery = "http://developer.echonest.com/api/v4/artist/genres?api_key=" + enKey
 			enSearchQuery += "&id=seatgeek:artist:" + perfID
@@ -148,7 +212,7 @@ function MyViewModel() {
 
 		$.getJSON(enSearchQuery, function (results) {
 			console.log(results);
-		});
+		});*/
 	}
 
 	// Make marker and corresponding info window for each event location.
