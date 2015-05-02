@@ -28,20 +28,9 @@ function MyViewModel() {
 		codeAddress(city);
 	}
 
-	self.echoCreate = function() {
-		searchEchoNest(1);
-	}
-	self.echoUpdate = function() {
-		searchEchoNest(2);
-	}
-	self.echoDelete = function() {
-		searchEchoNest(3);
-	}
-	self.echoStatus = function() {
-		searchEchoNest(4);
-	}
-	self.echoGenres = function() {
-		searchEchoNest(5);
+	self.searchEchoNest = function() {
+		//enID = self.currentPerformerID();
+		searchEchoNest(35);
 	}
 
 	self.displayEvent = function() {
@@ -163,153 +152,19 @@ function MyViewModel() {
 		}
 	}
 
-	var searchEchoNest = function(number) {
+	var searchEchoNest = function(enID) {
 		var enKey = "2QHXFMFAW2PDSCYKW";
-		var numberAction = number;
-		
-		var enDeleteTPQuery = "http://developer.echonest.com/api/v4/tasteprofile/delete";
-		var enCreateTPQuery = "http://developer.echonest.com/api/v4/tasteprofile/create";
-		var enUpdateTPQuery = "http://developer.echonest.com/api/v4/tasteprofile/update";
-
-		var enArtistData;
-		var allArtistData = [];
-		var performerSeatGeekID;
-		for (var i = 0, allEventsLength = allEvents.length; i < allEventsLength; i++) {
-			var currentPerformers = allEvents[i].eventPerformers;
-			var performersLength = currentPerformers.length;
-
-			for (var j = 0; j < performersLength; j++) {
-
-				var artistDataConstructor = {
-					item: {}
-				}
-				performerSeatGeekID = currentPerformers[j].performerID;
-				artistDataConstructor.item.artist_id = "seatgeek:artist:" + performerSeatGeekID;
-				allArtistData.push(artistDataConstructor);
-			}
-		}
-		enArtistData = JSON.stringify(allArtistData);
-
-var enTasteProfileID = "CAQYWUO14D16625CC3";
-//var ticketNo = "CABMOBP14D1647DAA1BDF20F77B81D4B";
-
-
-		var enDeleteTPData = {
+		var performerID = "seatgeek:artist:" + enID;
+		var enSearchQuery = "http://developer.echonest.com/api/v4/artist/profile?";
+			enSearchQuery += "bucket=genre&bucket=hotttnesss&bucket=hotttnesss_rank";
+		var enData = {
 			api_key: enKey,
-			id: enTasteProfileID,
-			format: "json"
+			id: performerID,
+			format: 'json'
 		}
-		var enCreateTPData = {
-			api_key: enKey,
-			type: "artist",
-			name: "gnodar_artist_tasteprofile",
-			format: "json"
-		}
-
-		var enUpdateTPData = {
-			api_key: enKey,
-			data_type: "json",
-			format: "json",
-			id: enTasteProfileID,
-			//data: enArtistData
-			data: '[{"item":{"artist_id":"seatgeek:artist:4933"}}]'
-		}
-
-		var deleteTasteProfile = function() {
-			console.log("run delete call");
-			console.log(enTasteProfileID);
-			console.log(enDeleteTPData.id);
-			$.post(enDeleteTPQuery, enDeleteTPData, function (results) {
-				console.log("deleted");
-				console.log(results);
-				//createTasteProfile();
-			});
-		}
-
-		var createTasteProfile = function() {
-			console.log("run create call")
-			$.post(enCreateTPQuery, enCreateTPData, function (results) {
-				tasteProfileExists = true;
-				if (results.response.status.code === 0) {
-					console.log("created")
-					enTasteProfileID = results.response.id;
-				}
-				else if (results.response.status.code === 5) {
-					console.log("already exists");
-					enTasteProfileID = results.response.status.id;
-				}
-				console.log(enTasteProfileID);
-				console.log(results);
-				//updateTasteProfile();
-			});	
-		}
-
-		var updateTasteProfile = function () {
-			console.log("run update call");
-			$.post(enUpdateTPQuery, enUpdateTPData, function (results) {
-				console.log("updated");
-				console.log(results);
-				ticketNo = results.response.ticket;
-				getTicketStatus();
-			});
-		}
-
-		var getTicketStatus = function () {
-			console.log("get ticket status:" + ticketNo);
-			var enTicketSearchQuery = "http://developer.echonest.com/api/v4/tasteprofile/status?api_key=" + enKey;
-			enTicketSearchQuery += "&format=json";
-			enTicketSearchQuery += "&ticket=" + ticketNo;
-
-			$.getJSON(enTicketSearchQuery, function (results) {
-				console.log("ticket status received")
-				console.log(results);
-				if (results.response.percent_complete === 100) {
-					getGenres();
-				}
-				else {
-					//getTicketStatus();
-					console.log("not done")
-				}
-			});
-		}
-
-		var getGenres = function () {
-			console.log("get genres");
-			var enGenreSearchQuery = "http://developer.echonest.com/api/v4/tasteprofile/read?api_key=" + enKey;
-			enGenreSearchQuery += "&format=json&id=" + enTasteProfileID;
-			enGenreSearchQuery += "&bucket=genre";
-
-			$.getJSON(enGenreSearchQuery, function (results) {
-				console.log("genres received")
-				console.log(results);
-			});
-		}
-
-
-
-		/*if (tasteProfileExists) {
-			deleteTasteProfile();
-		}
-		else {
-			createTasteProfile();
-		}*/
-		console.log(enArtistData)
-
-		if (numberAction ===1) {
-			createTasteProfile();
-		}
-		else if (numberAction === 2) {
-			updateTasteProfile();
-		}
-		else if (numberAction === 3) {
-			deleteTasteProfile();
-		}
-		else if (numberAction === 4) {
-			getTicketStatus();
-		}
-		else if (numberAction === 5) {
-			getGenres();
-		}
+		$.getJSON(enSearchQuery, enData, function (results) {
+			console.log(results);
+		})
 	}
 
 	// Make marker and corresponding info window for each event location.
