@@ -31,10 +31,10 @@ function MyViewModel() {
 	self.runEcho = function() {
 		searchEchoNest();
 	}
-	self.testEcho = function() {
+	/*self.testEcho = function() {
 		artistID = self.currentPerformerID();
 		testEchoNest(35);
-	}
+	}*/
 
 	self.displayEvent = function() {
 		var eventItem = this;
@@ -200,15 +200,38 @@ function MyViewModel() {
 			
 		}
 
-		if (tasteProfileExists) {
+		/*if (tasteProfileExists) {
 			deleteTasteProfile();
 		}
 		else {
 			createTasteProfile();
+		}*/
+
+		var allArtistData = [];
+		var performerSeatGeekID;
+		for (var i = 0, allEventsLength = allEvents.length; i < allEventsLength; i++) {
+			var currentPerformers = allEvents[i].eventPerformers;
+			var performersLength = currentPerformers.length;
+
+			for (var j = 0; j < performersLength; j++) {
+
+				var artistDataConstructor = {
+					action: "update",
+					item:{}
+				}
+				performerSeatGeekID = currentPerformers[j].performerID;
+				artistDataConstructor.item.foreign_id = "seatgeek:artist:" + performerSeatGeekID;
+				allArtistData.push(artistDataConstructor);
+			}
 		}
+		var enArtistData = JSON.stringify(allArtistData);
+		console.log(enArtistData);
+
+
+
 	}
 
-	var testEchoNest = function(performerID) {
+	/*var testEchoNest = function(performerID) {
 		var enKey = '2QHXFMFAW2PDSCYKW';
 		var perfID = performerID;
 		var enSearchQuery = "http://developer.echonest.com/api/v4/artist/genres?api_key=" + enKey
@@ -218,7 +241,7 @@ function MyViewModel() {
 		$.getJSON(enSearchQuery, function (results) {
 			console.log(results);
 		});
-	}
+	}*/
 
 	// Make marker and corresponding info window for each event location.
 	var mapSGResults = function(eventData) {
@@ -311,12 +334,12 @@ function MyViewModel() {
 				performer = {};
 				performer.performerName = currentEvent.performers[j].name;
 				performer.performerImgURL = currentEvent.performers[j].image;
-				// Each performer on SeatGeek's database has a unique ID, which among other things, can be used with the Echo Nest API.
-				performer.performerID = currentEvent.performers[j].id;
 				// Set the index of the event the performer belongs to, so that performer always has reference to the event.
 				performer.eventIndex = i;
 				// Set the index of the performer within the event, so that performer has reference to it's location within the event.
 				performer.performerIndex = j;
+				// Each performer on SeatGeek's database has a unique ID, which among other things, can be used with the Echo Nest API.
+				performer.performerID = currentEvent.performers[j].id;
 				// Push each performer for an event to the event listing.
 				eventListing.eventPerformers.push(performer);
 			}
