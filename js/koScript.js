@@ -171,7 +171,7 @@ function MyViewModel() {
 		var enCreateTPQuery = "http://developer.echonest.com/api/v4/tasteprofile/create";
 		var enUpdateTPQuery = "http://developer.echonest.com/api/v4/tasteprofile/update";
 
-		/*var enArtistData;
+		var enArtistData;
 		var allArtistData = [];
 		var performerSeatGeekID;
 		for (var i = 0, allEventsLength = allEvents.length; i < allEventsLength; i++) {
@@ -188,9 +188,10 @@ function MyViewModel() {
 				allArtistData.push(artistDataConstructor);
 			}
 		}
-		enArtistData = JSON.stringify(allArtistData);*/
+		enArtistData = JSON.stringify(allArtistData);
 
-var enTasteProfileID = "CAFIPHE14D163A0C9B";
+var enTasteProfileID = "CAQYWUO14D16625CC3";
+//var ticketNo = "CABMOBP14D1647DAA1BDF20F77B81D4B";
 
 
 		var enDeleteTPData = {
@@ -211,7 +212,7 @@ var enTasteProfileID = "CAFIPHE14D163A0C9B";
 			format: "json",
 			id: enTasteProfileID,
 			//data: enArtistData
-			data: '[{"item":{"artist_name":"seatgeek:artist:29441"}},{"item":{"artist_name":"seatgeek:artist:4933"}}]'
+			data: '[{"item":{"artist_id":"seatgeek:artist:4933"}}]'
 		}
 
 		var deleteTasteProfile = function() {
@@ -249,7 +250,26 @@ var enTasteProfileID = "CAFIPHE14D163A0C9B";
 				console.log("updated");
 				console.log(results);
 				ticketNo = results.response.ticket;
-				//getGenres();
+				getTicketStatus();
+			});
+		}
+
+		var getTicketStatus = function () {
+			console.log("get ticket status:" + ticketNo);
+			var enTicketSearchQuery = "http://developer.echonest.com/api/v4/tasteprofile/status?api_key=" + enKey;
+			enTicketSearchQuery += "&format=json";
+			enTicketSearchQuery += "&ticket=" + ticketNo;
+
+			$.getJSON(enTicketSearchQuery, function (results) {
+				console.log("ticket status received")
+				console.log(results);
+				if (results.response.percent_complete === 100) {
+					getGenres();
+				}
+				else {
+					//getTicketStatus();
+					console.log("not done")
+				}
 			});
 		}
 
@@ -265,17 +285,7 @@ var enTasteProfileID = "CAFIPHE14D163A0C9B";
 			});
 		}
 
-		var getTicketStatus = function () {
-			console.log("get ticket status");
-			var enTicketSearchQuery = "http://developer.echonest.com/api/v4/tasteprofile/status?api_key=" + enKey;
-			enTicketSearchQuery += "&format=json";
-			enTicketSearchQuery += "&ticket=" + ticketNo;
 
-			$.getJSON(enTicketSearchQuery, function (results) {
-				console.log("ticket status received")
-				console.log(results);
-			});
-		}
 
 		/*if (tasteProfileExists) {
 			deleteTasteProfile();
@@ -283,7 +293,7 @@ var enTasteProfileID = "CAFIPHE14D163A0C9B";
 		else {
 			createTasteProfile();
 		}*/
-		//console.log(enArtistData)
+		console.log(enArtistData)
 
 		if (numberAction ===1) {
 			createTasteProfile();
