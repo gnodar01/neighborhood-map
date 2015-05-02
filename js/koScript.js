@@ -161,15 +161,21 @@ function MyViewModel() {
 		var enKey = "2QHXFMFAW2PDSCYKW";
 		var performerID = "seatgeek:artist:" + enID;
 		var enSearchQuery = "http://developer.echonest.com/api/v4/artist/profile?";
-			enSearchQuery += "bucket=songs&bucket=urls&bucket=video";
 
 		var enData = {
 			api_key: enKey,
 			id: performerID,
 			format: 'json',
+			bucket: ["songs","urls","video","genre"]
 		}
 
-		$.getJSON(enSearchQuery, enData, parseENResults);
+		$.ajax({
+			url: enSearchQuery,
+			data: enData,
+			success: parseENResults,
+			dataType: 'json',
+			traditional: true
+		})
 	}
 
 	// Make marker and corresponding info window for each event location.
