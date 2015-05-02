@@ -28,9 +28,10 @@ function MyViewModel() {
 		codeAddress(city);
 	}
 
-	self.searchEchoNest = function() {
-		//enID = self.currentPerformerID();
-		searchEchoNest(35);
+	self.runEchoNest = function() {
+		enID = self.currentPerformerID();
+		searchEchoNest(enID);
+
 	}
 
 	self.displayEvent = function() {
@@ -152,19 +153,23 @@ function MyViewModel() {
 		}
 	}
 
+	var parseENResults = function (enInfo) {
+		console.log(enInfo);
+	}
+
 	var searchEchoNest = function(enID) {
 		var enKey = "2QHXFMFAW2PDSCYKW";
 		var performerID = "seatgeek:artist:" + enID;
 		var enSearchQuery = "http://developer.echonest.com/api/v4/artist/profile?";
-			enSearchQuery += "bucket=genre&bucket=hotttnesss&bucket=hotttnesss_rank";
+			enSearchQuery += "bucket=songs&bucket=urls&bucket=video";
+
 		var enData = {
 			api_key: enKey,
 			id: performerID,
-			format: 'json'
+			format: 'json',
 		}
-		$.getJSON(enSearchQuery, enData, function (results) {
-			console.log(results);
-		})
+
+		$.getJSON(enSearchQuery, enData, parseENResults);
 	}
 
 	// Make marker and corresponding info window for each event location.
