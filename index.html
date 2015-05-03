@@ -37,7 +37,7 @@
 		<p data-bind="visible: currentVenueAddress">Address: <span data-bind="text: currentVenueAddress"></span></p>
 		<p data-bind="visible: currentEventDate">Date/Time: <span data-bind="text: currentEventDate"></span></p>
 		<p data-bind="visible: currentPerformerName">Peformer: <span data-bind="text: currentPerformerName"></span></p>
-		<p data-bind="visible: currentPerformerGenres() > 0">Genres: 
+		<p data-bind="visible: currentPerformerGenres().length > 0">Genres: 
 			<ul data-bind="foreach: currentPerformerGenres">
 				<li data-bind="text: name">
 			</ul>
@@ -53,7 +53,7 @@
 			</div>
 		</p>
 
-		<p data-bind="visible: currentPerformerVideos() > 0">Videos:
+		<p data-bind="visible: currentPerformerVideos().length > 0">Videos:
 			<div data-bind="foreach: currentPerformerVideos">
 					<a data-bind="attr: {href: url, target:'_blank'}"><img data-bind="attr: {src: image_url}"></a>
 			</div>
