@@ -1,6 +1,8 @@
 function MyViewModel() {
 	var self = this;
 
+	self.searchButtonText = ko.observable("Show Me The Music!");
+
 	self.cityVal = ko.observable("Orlando");
 	self.venueVal = ko.observable();
 
@@ -21,9 +23,9 @@ function MyViewModel() {
 	more accurate than simply searching by city. */
 	self.runSearch = function() {
 		var city = self.cityVal();
-
-		//allEvents = [];
-		//allMarkers = [];
+		// Change button text after initial search, so user knows more events may be loaded.
+		self.searchButtonText("Load More Events");
+		// Keeps track of what page of results we are currently on.
 		sgCurrentPage++;
 		codeAddress(city);
 	}
