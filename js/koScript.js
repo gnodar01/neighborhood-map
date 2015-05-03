@@ -22,9 +22,9 @@ function MyViewModel() {
 	self.runSearch = function() {
 		var city = self.cityVal();
 
-		allEvents = [];
-		allMarkers = [];
-
+		//allEvents = [];
+		//allMarkers = [];
+		sgCurrentPage++;
 		codeAddress(city);
 	}
 
@@ -35,6 +35,7 @@ function MyViewModel() {
 	}
 
 	self.displayEvent = function() {
+		console.log(this)
 		var eventItem = this;
 
 		var index = this.eventIndex;
@@ -121,20 +122,9 @@ function MyViewModel() {
 	var geocoder, map;
 	// When and info window is opened, currentInfoWindow will be set to it.
 	var currentInfoWindow;
-	var allEvents, allMarkers;
-	/* When the EchoNest API function runs, it creates what's called a taste profile.
-	  Before the function is run again, the taste profile must be deleted.
-	  The variable tasteProfileExists, is set to true when the EchoNest API call is first made.
-	  When the EchoNest API call is made again, it checks if tasteProfileExists is true, and if
-	  it is, it deletes the current taste profile, before making a new one. */
-	var tasteProfileExists = false;
-	/* When the EchoNest API runs and a taste profile is created, it returns a taste profile ID.
-	  This ID is needed to modify the taste profile, and to delete it. It must be kept outside of
-	  the function, otherwise after the function runs the first time and clears the stack, the
-	  enTasteProfileID variable will lose whatever value it is currently holding. */
-	var enTasteProfileID;
-	// Ticket number is needed to check the status of the Echo Nest taste profile
-	var ticketNo;
+	var allEvents = [], allMarkers = [];
+	// Keeps track of which page on seet geek results we're currently on
+	var sgCurrentPage = 0;
 
 	var initialize = function () {
 		geocoder = new google.maps.Geocoder();
@@ -182,7 +172,8 @@ function MyViewModel() {
 	var mapSGResults = function(eventData) {
 		var eventMarker, contentString, eventLat, eventLng, eventLatLng;
 
-		for (var i = 0, eventDataLen = eventData.length; i < eventDataLen; i++) {
+		// All events are passed in, so if on second page of results, it need to start where new page's events begin
+		for (var i = 0 + (50 * sgCurrentPage - 50), eventDataLen = eventData.length; i < eventDataLen; i++) {
 			eventLat = eventData[i].eventVenue.lat;
 			eventLng = eventData[i].eventVenue.lng;
 			// Construct a lat/long object using google maps LatLng class.
@@ -270,7 +261,8 @@ function MyViewModel() {
 				performer.performerName = currentEvent.performers[j].name;
 				performer.performerImgURL = currentEvent.performers[j].image;
 				// Set the index of the event the performer belongs to, so that performer always has reference to the event.
-				performer.eventIndex = i;
+				// If another page has been loaded, the event index has to start where the previous event index ended.
+				performer.eventIndex = i + (50 * sgCurrentPage - 50);
 				// Set the index of the performer within the event, so that performer has reference to it's location within the event.
 				performer.performerIndex = j;
 				// Each performer on SeatGeek's database has a unique ID, which among other things, can be used with the Echo Nest API.
@@ -292,6 +284,7 @@ function MyViewModel() {
 		mapSGResults(allEvents);
 		self.events(allEvents);
 
+
 		//-----------------------------//
 			console.log(allEvents);
 		//-----------------------------//
@@ -305,22 +298,26 @@ function MyViewModel() {
 		Only music related events are needed so it must be specified in the api call. The taxonomies array includes all music related taxonomies
 		that are returned by SeatGeek. Each taxonomy is looped through, with an added search query, and appended to the full query, which is then
 		appended to the full URL for the api call. */
-		var taxonomies = ['concert','music_festival','classical','classical_opera','classical_vocal','classical_orchestral_instrumental'],
-		taxonomySearchString = "&taxonomies.name=",
-		fullTaxonomyQuery = "";
+		var taxonomies = ['concert','music_festival','classical','classical_opera','classical_vocal','classical_orchestral_instrumental'];
 
-		for (var i = 0, taxLength = taxonomies.length; i < taxLength; i++) {
-			var taxonomySearchQuery = taxonomySearchString + taxonomies[i];
-			fullTaxonomyQuery += taxonomySearchQuery;
+		function getResults (results) {
+			parseSGResults(results);
 		}
 
-		var sgSearchQuery = "http://api.seatgeek.com/2/events?per_page=50";
-			sgSearchQuery += fullTaxonomyQuery;
-			sgSearchQuery += "&lat=" + lat;
-			sgSearchQuery += "&lon=" + lng;
+		var sgData = {
+			per_page: 50,
+			'taxonomies.name': taxonomies,
+			lat: lat,
+			lon: lng,
+			page: sgCurrentPage
+		}
 
-		$.getJSON(sgSearchQuery, function (data) {
-			parseSGResults(data);
+		$.ajax({
+			url: "http://api.seatgeek.com/2/events",
+			dataType: 'json',
+			data: sgData,
+			traditional: true,
+			success: getResults
 		});
 	}
 
