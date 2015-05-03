@@ -9,6 +9,7 @@ function MyViewModel() {
 	self.events = ko.observableArray();
 	self.markers = ko.observableArray();
 
+	self.performerInfo = ko.observable(false);
 	self.currentEventName = ko.observable();
 	self.currentEventDate = ko.observable();
 	self.currentVenueName = ko.observable();
@@ -116,6 +117,15 @@ function MyViewModel() {
 		setAllMap(map);
 	}
 
+	self.openPerformerInfo = function() {
+		self.performerInfo(true);
+	}
+
+	self.closePerformerInfo = function() {
+		self.performerInfo(false);
+		initialize();
+		setAllMap(map);
+	}
 
 	/*-------------------PRIVATE-------------------*/
 
@@ -131,7 +141,20 @@ function MyViewModel() {
 		var latlng = new google.maps.LatLng(28.4158, -81.2989);
 		var mapOptions = {
 			zoom: 8,
-		center: latlng
+			center: latlng,
+			mapTypeControl: true,
+			mapTypeControlOptions: {
+				style: google.maps.MapTypeControlStyle.DEFAULT,
+				mapTypeIds: [
+					google.maps.MapTypeId.ROADMAP,	
+					google.maps.MapTypeId.TERRAIN
+				]
+			},
+			zoomControl: true,
+			zoomControlOptions: {
+				style: google.maps.ZoomControlStyle.SMALL
+			},
+			panControl: false
 		}
 		map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 	}
@@ -204,8 +227,10 @@ function MyViewModel() {
 			// New info window for each event, with it's correspoinding contentString.
 			eventMarker.info = new google.maps.InfoWindow({
 				// HTML that provides markup for event information displayed in the google maps info window.
+				// The button will access the view model's openPerformerInfo function
 				content: "<div id='content'>" +
-				"<h1 id='content_header'>" + eventData[i].eventTitle + "</h1>"
+				"<h1 id='content_header'>" + eventData[i].eventTitle + "</h1>" +
+				"<button onclick=vm.openPerformerInfo()>Get More Info</button>"
 			});
 
 			// Push to array of all markers.
@@ -294,15 +319,13 @@ function MyViewModel() {
 			// Push to all events array which holds each event listing returned from SeatGeek.
 			allEvents.push(eventListing);
 		}
+		self.events(allEvents);
 		// Place marker on each event's location with performer information.
 		mapSGResults(allEvents);
-		self.events(allEvents);
-
 
 		//-----------------------------//
 			console.log(allEvents);
 		//-----------------------------//
-
 
 	}
 

@@ -1,9 +1,17 @@
-html, body, .map-list {margin: 0; padding: 0; height: 90%; position: relative;}
-#map-canvas { height: 100%; width: 50%; margin: 0; padding: 0; position: absolute; left:0; top:0;}
-#results {height: 100%; width: 50%; margin: 0; padding:0; position: absolute; right:0; top:0; overflow:auto;}
+html, body, .map-list {margin: 0; padding: 0; height: 100%; position: relative;}
+#map-canvas { height: 100%; width: 100%; margin: 0; padding: 0; position: absolute; left:0; top:0;}
 #content_header {color: orange;}
-#performer-info {width: 50%; word-wrap: break-word;}
-img {width: 100px; height: 100px;}
+
+.results {height: 100%; width: auto; margin: 0; padding:0; position: absolute; right:0; top:0; background-color: white;}
+#results-list {height: 100%; overflow:auto;}
+
+.artist_name {margin-left: 40px; margin-top: 0px; margin-bottom: 0px;}
+.performer-info {}
+
 .highlight-event {background-color: #FFEBCC;}
 .highlight-performer {background-color: orange;}
-.artist_name {margin-left: 40px; margin-top: 0px; margin-bottom: 0px;}
+
+img {width: 200px; height: 200px;}
+
+.filled {display: none;}
+
