@@ -21,14 +21,14 @@
 			<input type="text" data-bind="value: venueVal">
 			<button data-bind="click: filterVenues">Set Filter</button>
 			<button data-bind="click: removeFilter">Remove Filter</button>
-			<ul id="results-list" data-bind="foreach: events">
-				<li><span data-bind="text: eventVenue.name"></span>
-					<ul data-bind="foreach: eventPerformers">
-						<li data-bind="text: performerName, click: $root.displayEvent, css: { 'highlight-event': eventIndex === $root.currentEventIndex(), 'highlight-performer': performerID === $root.currentPerformerID() }">
-						</li>
-					</ul>
-				</li>
-			</ul>
+			<div id="results-list" data-bind="foreach: events">
+				<div><span data-bind="text: eventVenue.name"></span>
+					<div data-bind="foreach: eventPerformers">
+						<p class="artist_name" data-bind="text: performerName, click: $root.displayEvent, css: { 'highlight-event': eventIndex === $root.currentEventIndex(), 'highlight-performer': performerID === $root.currentPerformerID() }">
+						</p>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div id="performer-info">
@@ -38,9 +38,9 @@
 		<p data-bind="visible: currentEventDate">Date/Time: <span data-bind="text: currentEventDate"></span></p>
 		<p data-bind="visible: currentPerformerName">Peformer: <span data-bind="text: currentPerformerName"></span></p>
 		<p data-bind="visible: currentPerformerGenres().length > 0">Genres: 
-			<ul data-bind="foreach: currentPerformerGenres">
-				<li data-bind="text: name">
-			</ul>
+			<div data-bind="foreach: currentPerformerGenres">
+				<p data-bind="text: name"></p>
+			</div>
 		</p>
 
 		<p data-bind="visible: currentPerformerURLs">Links: 

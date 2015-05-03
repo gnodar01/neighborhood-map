@@ -145,13 +145,20 @@ function MyViewModel() {
 
 	var parseENResults = function (enInfo) {
 		console.log(enInfo);
-		var artistData = enInfo.response.artist;
-		var artistURLs = artistData.urls,
-			artistGenres = artistData.genres,		
-			artistVideos = artistData.video;
-		self.currentPerformerURLs(artistURLs);
-		self.currentPerformerGenres(artistGenres);
-		self.currentPerformerVideos(artistVideos);
+		// Empty observables in case there is any information that cannot be overwritten by the new artist's info.
+		self.currentPerformerURLs("");
+		self.currentPerformerGenres([]);
+		self.currentPerformerVideos([]);
+		// A status code of 0 means that the artist info was successfully found.
+		if (enInfo.response.status.code === 0) {
+			var artistData = enInfo.response.artist;
+			var artistURLs = artistData.urls,
+				artistGenres = artistData.genres,		
+				artistVideos = artistData.video;
+			self.currentPerformerURLs(artistURLs);
+			self.currentPerformerGenres(artistGenres);
+			self.currentPerformerVideos(artistVideos);
+		}
 	}
 
 	var searchEchoNest = function(enID) {
