@@ -13,8 +13,6 @@
 	<div id="location-input">
 			<input type="text" data-bind="value: cityVal">
 			<button data-bind="click: runSearch, text: searchButtonText"></button>
-			<button data-bind="click: runEchoNest">Run Echo</button>
-			<!--<button data-bind="click: testEcho"> Test Echo</button>-->
 			<p><span data-bind="text: cityVal"></span></p>
 	</div>
 	<div class="map-list">
@@ -39,6 +37,24 @@
 		<p data-bind="visible: currentVenueAddress">Address: <span data-bind="text: currentVenueAddress"></span></p>
 		<p data-bind="visible: currentEventDate">Date/Time: <span data-bind="text: currentEventDate"></span></p>
 		<p data-bind="visible: currentPerformerName">Peformer: <span data-bind="text: currentPerformerName"></span></p>
+		<p data-bind="visible: currentPerformerGenres">Genres: 
+			<ul data-bind="foreach: currentPerformerGenres">
+				<li data-bind="text: name">
+			</ul>
+		</p>
+
+		<p data-bind="visible: currentPerformerURLs">Links: 
+			<div data-bind="foreach: currentPerformerURLs">
+				<p data-bind="if: $data.lastfm_url"><a data-bind="attr: { href: lastfm_url}">Last FM</a></p>
+				<p data-bind="if: $data.mb_url"><a data-bind="attr: { href: mb_url}">MusicBrainz</a></p>
+				<p data-bind="if: $data.myspace_url"><a data-bind="attr: { href: myspace_url}">Myspace</a></p>
+				<p data-bind="if: $data.twitter_url"><a data-bind="attr: { href: twitter_url}">Twitter</a></p>
+				<p data-bind="if: $data.wikipedia_url"><a data-bind="attr: { href: wikipedia_url}">Wikipedia</a></p>
+			</div>
+		</p>
+
+		<p data-bind="visible: currentPerformerVideos">Videos: <span data-bind="text: currentPerformerVideos"></span></p>
+
 		</div>
 	</div>
 

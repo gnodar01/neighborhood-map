@@ -16,6 +16,9 @@ function MyViewModel() {
 	self.currentPerformerID = ko.observable();
 	self.currentVenueAddress = ko.observable();
 	self.currentPerformerName = ko.observable();
+	self.currentPerformerURLs = ko.observable();
+	self.currentPerformerGenres = ko.observable();
+	self.currentPerformerVideos = ko.observable();
 
 	/* When the button is clicked, the city that was
 	inputted is sent to the google maps geocoder to get the
@@ -30,14 +33,7 @@ function MyViewModel() {
 		codeAddress(city);
 	}
 
-	self.runEchoNest = function() {
-		enID = self.currentPerformerID();
-		searchEchoNest(enID);
-
-	}
-
 	self.displayEvent = function() {
-		console.log(this)
 		var eventItem = this;
 
 		var index = this.eventIndex;
@@ -77,6 +73,8 @@ function MyViewModel() {
 		self.currentVenueAddress(currentEvent.eventVenue.address);
 
 		self.currentPerformerName(currentPerformer.performerName);
+
+		searchEchoNest(performerID);
 	}
 
 	self.filterVenues = function() {
@@ -147,6 +145,16 @@ function MyViewModel() {
 
 	var parseENResults = function (enInfo) {
 		console.log(enInfo);
+		var artistData = enInfo.response.artist;
+		var artistURLs = artistData.urls,
+			artistGenre = artistData.genres,		
+			artistVideos = artistData.video;
+		self.currentPerformerURLs(artistURLs);
+		self.currentPerformerGenres(artistGenre);
+		self.currentPerformerVideos(artistVideos);
+		console.log(self.currentPerformerURLs());
+		console.log(self.currentPerformerGenres())
+		console.log(self.currentPerformerVideos())
 	}
 
 	var searchEchoNest = function(enID) {
@@ -158,7 +166,7 @@ function MyViewModel() {
 			api_key: enKey,
 			id: performerID,
 			format: 'json',
-			bucket: ["songs","urls","video","genre"]
+			bucket: ["urls","video","genre"]
 		}
 
 		$.ajax({
