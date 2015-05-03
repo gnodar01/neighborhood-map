@@ -9,6 +9,7 @@ function MyViewModel() {
 	self.events = ko.observableArray();
 	self.markers = ko.observableArray();
 
+	self.resultsInfo = ko.observable(false);
 	self.performerInfo = ko.observable(false);
 	self.currentEventName = ko.observable();
 	self.currentEventDate = ko.observable();
@@ -320,6 +321,8 @@ function MyViewModel() {
 			allEvents.push(eventListing);
 		}
 		self.events(allEvents);
+		// Sets the results info observable to true so that the view knows to show results.
+		self.resultsInfo(true);
 		// Place marker on each event's location with performer information.
 		mapSGResults(allEvents);
 

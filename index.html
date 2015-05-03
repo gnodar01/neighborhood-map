@@ -17,7 +17,7 @@
 	</div>
 	<div data-bind="if: !performerInfo(), css: {'map-list': !performerInfo()}">
 		<div id="map-canvas"></div>
-		<div class = "results" data-bind="if: events().length > 0 ">
+		<div class = "results" data-bind="if: resultsInfo">
 			<input type="text" placeholder="Venue Name" data-bind="value: venueVal">
 			<button data-bind="click: filterVenues">Set Filter</button>
 			<button data-bind="click: removeFilter">Remove Filter</button>
