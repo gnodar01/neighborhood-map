@@ -17,8 +17,8 @@ function MyViewModel() {
 	self.currentVenueAddress = ko.observable();
 	self.currentPerformerName = ko.observable();
 	self.currentPerformerURLs = ko.observable();
-	self.currentPerformerGenres = ko.observable();
-	self.currentPerformerVideos = ko.observable();
+	self.currentPerformerGenres = ko.observableArray();
+	self.currentPerformerVideos = ko.observableArray();
 
 	/* When the button is clicked, the city that was
 	inputted is sent to the google maps geocoder to get the
@@ -147,14 +147,11 @@ function MyViewModel() {
 		console.log(enInfo);
 		var artistData = enInfo.response.artist;
 		var artistURLs = artistData.urls,
-			artistGenre = artistData.genres,		
+			artistGenres = artistData.genres,		
 			artistVideos = artistData.video;
 		self.currentPerformerURLs(artistURLs);
-		self.currentPerformerGenres(artistGenre);
+		self.currentPerformerGenres(artistGenres);
 		self.currentPerformerVideos(artistVideos);
-		console.log(self.currentPerformerURLs());
-		console.log(self.currentPerformerGenres())
-		console.log(self.currentPerformerVideos())
 	}
 
 	var searchEchoNest = function(enID) {

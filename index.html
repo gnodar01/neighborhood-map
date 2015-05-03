@@ -37,7 +37,7 @@
 		<p data-bind="visible: currentVenueAddress">Address: <span data-bind="text: currentVenueAddress"></span></p>
 		<p data-bind="visible: currentEventDate">Date/Time: <span data-bind="text: currentEventDate"></span></p>
 		<p data-bind="visible: currentPerformerName">Peformer: <span data-bind="text: currentPerformerName"></span></p>
-		<p data-bind="visible: currentPerformerGenres">Genres: 
+		<p data-bind="visible: currentPerformerGenres() > 0">Genres: 
 			<ul data-bind="foreach: currentPerformerGenres">
 				<li data-bind="text: name">
 			</ul>
@@ -45,15 +45,19 @@
 
 		<p data-bind="visible: currentPerformerURLs">Links: 
 			<div data-bind="foreach: currentPerformerURLs">
-				<p data-bind="if: $data.lastfm_url"><a data-bind="attr: { href: lastfm_url}">Last FM</a></p>
-				<p data-bind="if: $data.mb_url"><a data-bind="attr: { href: mb_url}">MusicBrainz</a></p>
-				<p data-bind="if: $data.myspace_url"><a data-bind="attr: { href: myspace_url}">Myspace</a></p>
-				<p data-bind="if: $data.twitter_url"><a data-bind="attr: { href: twitter_url}">Twitter</a></p>
-				<p data-bind="if: $data.wikipedia_url"><a data-bind="attr: { href: wikipedia_url}">Wikipedia</a></p>
+				<p data-bind="if: $data.lastfm_url"><a data-bind="attr: { href: lastfm_url, target:'_blank'}">Last FM</a></p>
+				<p data-bind="if: $data.mb_url"><a data-bind="attr: { href: mb_url, target:'_blank'}">MusicBrainz</a></p>
+				<p data-bind="if: $data.myspace_url"><a data-bind="attr: { href: myspace_url, target:'_blank'}">Myspace</a></p>
+				<p data-bind="if: $data.twitter_url"><a data-bind="attr: { href: twitter_url, target:'_blank'}">Twitter</a></p>
+				<p data-bind="if: $data.wikipedia_url"><a data-bind="attr: { href: wikipedia_url, target:'_blank'}">Wikipedia</a></p>
 			</div>
 		</p>
 
-		<p data-bind="visible: currentPerformerVideos">Videos: <span data-bind="text: currentPerformerVideos"></span></p>
+		<p data-bind="visible: currentPerformerVideos() > 0">Videos:
+			<div data-bind="foreach: currentPerformerVideos">
+					<a data-bind="attr: {href: url, target:'_blank'}"><img data-bind="attr: {src: image_url}"></a>
+			</div>
+		</p>
 
 		</div>
 	</div>
