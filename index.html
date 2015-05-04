@@ -14,7 +14,7 @@
 	<div class="container">
 			<div data-bind="if: !performerInfo(), css: {'map-list': !performerInfo()}">
 				<div class="row">
-					<div class="location-input" data-bind="if: !performerInfo()">
+					<div class="location-input" data-bind="ifnot: performerInfo()">
 						<input class="form-group" type="text" data-bind="value: cityVal">
 						<button class="btn btn-warning btn-sm" data-bind="click: runSearch, text: searchButtonText"></button>
 					</div>
@@ -62,7 +62,12 @@
 					</div>
 					<div class="info-heading" data-bind="visible: currentPerformerVideos().length >0"><h2 class="info-heading">Videos</h2></div>
 					<div class="videos-list" data-bind="foreach: currentPerformerVideos">
+						<span data-bind="if: $data.image_url">
 							<a data-bind="attr: {href: url, target:'_blank'}"><img data-bind="attr: {src: image_url}"></a>
+						</span>
+						<span data-bind="ifnot: $data.image_url">
+							<a data-bind="attr: {href: url, target:'_blank'}"><img data-bind="attr: {src: 'images/default.jpg'}"></a>
+						</span>
 					</div>
 				</div>
 			</div>

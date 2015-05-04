@@ -199,6 +199,7 @@ function MyViewModel() {
 			self.currentPerformerURLs(artistURLs);
 			self.currentPerformerGenres(artistGenres);
 			self.currentPerformerVideos(artistVideos);
+			console.log(self.currentPerformerVideos())
 		}
 	}
 
@@ -239,7 +240,7 @@ function MyViewModel() {
 			eventMarker = new google.maps.Marker({
 				map: map,
 				position: eventLatLng,
-				icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+				icon: "images/green-dot.png"
 			});
 
 			// New info window for each event, with it's correspoinding contentString.
@@ -396,7 +397,7 @@ function MyViewModel() {
 				var marker = new google.maps.Marker({
 					map: map,
 					position: resultsLocation,
-					icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+					icon: "images/blue-dot.png"
 				});
 		    } 
 			else {
