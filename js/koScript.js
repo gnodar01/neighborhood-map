@@ -66,6 +66,7 @@ function MyViewModel() {
 		}
 		// Open current event's info window.
 		marker.info.open(map,marker)
+		map.setCenter(marker.position);
 
 		self.currentEventDate(currentEvent.eventDate);
 		// Set observables with event info so that the performer info area in the View will be populated.
@@ -141,7 +142,7 @@ function MyViewModel() {
 		geocoder = new google.maps.Geocoder();
 		var latlng = new google.maps.LatLng(28.4158, -81.2989);
 		var mapOptions = {
-			zoom: 8,
+			zoom: 10,
 			center: latlng,
 			mapTypeControl: true,
 			mapTypeControlOptions: {
@@ -158,6 +159,22 @@ function MyViewModel() {
 			panControl: false
 		}
 		map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+		// Keeps track of map resizes, and sets new center based on new map size
+		function newCenter() {
+			var center = map.getCenter();
+			google.maps.event.trigger(map, "resize");
+			map.setCenter(center); 
+
+		}
+		google.maps.event.addDomListener(map, "idle", function() {
+			newCenter();
+		});
+		google.maps.event.addDomListener(window, "resize", function() {
+			newCenter();
+		});
+
+
 	}
 
 	// Sets the map on all markers in the array.
@@ -401,7 +418,6 @@ function MyViewModel() {
 		$('#results-list').css('height', (h - (offsetTop*2)));
 
 	}).resize();
-
 }
 
 var vm = new MyViewModel();
