@@ -7,24 +7,28 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<script src="js/knockout.js"></script>
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCXZtFSTS35oIM_e8iL7uIOMm2G_23Rng"></script>
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-	<div data-bind="if: !performerInfo()">
-			<input type="text" data-bind="value: cityVal">
-			<button data-bind="click: runSearch, text: searchButtonText"></button>
-			<div><span data-bind="text: cityVal"></span></div>
-	</div>
-	<div data-bind="if: !performerInfo(), css: {'map-list': !performerInfo()}">
-		<div id="map-canvas"></div>
-		<div class = "results" data-bind="if: resultsInfo">
-			<input type="text" placeholder="Venue Name" data-bind="value: venueVal">
-			<button data-bind="click: filterVenues">Set Filter</button>
-			<button data-bind="click: removeFilter">Remove Filter</button>
-			<div id="results-list" data-bind="foreach: events">
-				<div><span data-bind="text: eventVenue.name"></span>
-					<div data-bind="foreach: eventPerformers">
-						<div class="artist_name" data-bind="text: performerName, click: $root.displayEvent, css: { 'highlight-event': eventIndex === $root.currentEventIndex(), 'highlight-performer': performerID === $root.currentPerformerID() }">
+	<div class="container">
+		<div data-bind="if: !performerInfo(), css: {'map-list': !performerInfo()}">
+			<div class="row">
+				<div class="location-input" data-bind="if: !performerInfo()">
+					<input type="text" data-bind="value: cityVal">
+					<button data-bind="click: runSearch, text: searchButtonText"></button>
+				</div>
+				<div data-bind="css: {'col-md-7': resultsInfo}" id="map-canvas"></div>
+				<div class="col-md-4" "results" data-bind="if: resultsInfo">
+					<input type="text" placeholder="Venue Name" data-bind="value: venueVal">
+					<button data-bind="click: filterVenues">Set Filter</button>
+					<button data-bind="click: removeFilter">Remove Filter</button>
+					<div id="results-list" data-bind="foreach: events">
+						<div><span data-bind="text: eventVenue.name"></span>
+							<div data-bind="foreach: eventPerformers">
+								<div class="artist_name" data-bind="text: performerName, click: $root.displayEvent, css: { 'highlight-event': eventIndex === $root.currentEventIndex(), 'highlight-performer': performerID === $root.currentPerformerID() }">
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -33,17 +37,17 @@
 	</div>
 	<div data-bind="if: performerInfo" class="performer-info">
 		<button data-bind="click: closePerformerInfo"> Back To Map </button>
-		<p data-bind="visible: currentEventName">Event: <span data-bind="text: currentEventName"></span></p>
-		<p data-bind="visible: currentVenueName">Venue: <span data-bind="text: currentVenueName"></span></p>
-		<p data-bind="visible: currentVenueAddress">Address: <span data-bind="text: currentVenueAddress"></span></p>
-		<p data-bind="visible: currentEventDate">Date/Time: <span data-bind="text: currentEventDate"></span></p>
-		<p data-bind="visible: currentPerformerName">Peformer: <span data-bind="text: currentPerformerName"></span></p>
-		<p data-bind="visible: currentPerformerGenres().length > 0">Genres: 
+		<p class="event-heading" data-bind="visible: currentEventName">Event<br><span data-bind="text: currentEventName"></span></p>
+		<p class="event-heading" data-bind="visible: currentVenueName">Venue<br><span data-bind="text: currentVenueName"></span></p>
+		<p class="event-heading" data-bind="visible: currentVenueAddress">Address<br><span data-bind="text: currentVenueAddress"></span></p>
+		<p class="event-heading" data-bind="visible: currentEventDate">Date/Time<br><span data-bind="text: currentEventDate"></span></p>
+		<p class="event-heading" data-bind="visible: currentPerformerName">Peformer<br><span data-bind="text: currentPerformerName"></span></p>
+		<p class="event-heading" data-bind="visible: currentPerformerGenres().length > 0">Genres<br>
 			<div data-bind="foreach: currentPerformerGenres">
-				<div data-bind="text: name"></div>
+				
 			</div>
 		</p>
-		<p data-bind="visible: currentPerformerURLs">Links: 
+		<p class="event-heading" data-bind="visible: currentPerformerURLs">Links<br>
 			<div data-bind="foreach: currentPerformerURLs">
 				<div data-bind="if: $data.lastfm_url"><a data-bind="attr: { href: lastfm_url, target:'_blank'}">Last FM</a></div>
 				<div data-bind="if: $data.mb_url"><a data-bind="attr: { href: mb_url, target:'_blank'}">MusicBrainz</a></div>
@@ -52,14 +56,13 @@
 				<div data-bind="if: $data.wikipedia_url"><a data-bind="attr: { href: wikipedia_url, target:'_blank'}">Wikipedia</a></div>
 			</div>
 		</p>
-		<p data-bind="visible: currentPerformerVideos().length > 0">Videos:
+		<p class="event-heading" data-bind="visible: currentPerformerVideos().length > 0">Videos<br>
 			<div data-bind="foreach: currentPerformerVideos">
 					<a data-bind="attr: {href: url, target:'_blank'}"><img data-bind="attr: {src: image_url}"></a>
 			</div>
 		</p>
-
-		</div>
 	</div>
+
 
 	<script src="js/koScript.js"></script>
 </body>

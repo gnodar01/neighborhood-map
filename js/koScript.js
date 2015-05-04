@@ -231,7 +231,7 @@ function MyViewModel() {
 				// The button will access the view model's openPerformerInfo function
 				content: "<div id='content'>" +
 				"<h1 id='content_header'>" + eventData[i].eventTitle + "</h1>" +
-				"<button onclick=vm.openPerformerInfo()>Get More Info</button>"
+				"<button onclick=vm.openPerformerInfo()>Artist Info</button>"
 			});
 
 			// Push to array of all markers.
@@ -391,6 +391,17 @@ function MyViewModel() {
 	}
 
 	google.maps.event.addDomListener(window, 'load', initialize);
+
+	// Bootstrap doesn't play nicely with google maps, so this autosizes the map
+	$(window).resize(function () {
+		var h = $(window).height(),
+		offsetTop = 30; // Calculate the top offset
+
+		$('#map-canvas').css('height', (h - offsetTop));
+		$('#results-list').css('height', (h - (offsetTop*2)));
+
+	}).resize();
+
 }
 
 var vm = new MyViewModel();
