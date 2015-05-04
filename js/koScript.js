@@ -9,6 +9,7 @@ function MyViewModel() {
 	self.events = ko.observableArray();
 	self.markers = ko.observableArray();
 
+	self.resultsInfo = ko.observable(false);
 	self.performerInfo = ko.observable(false);
 	self.currentEventName = ko.observable();
 	self.currentEventDate = ko.observable();
@@ -230,7 +231,7 @@ function MyViewModel() {
 				// The button will access the view model's openPerformerInfo function
 				content: "<div id='content'>" +
 				"<h1 id='content_header'>" + eventData[i].eventTitle + "</h1>" +
-				"<button onclick=vm.openPerformerInfo()>Get More Info</button>"
+				"<button onclick=vm.openPerformerInfo()>Artist Info</button>"
 			});
 
 			// Push to array of all markers.
@@ -320,6 +321,8 @@ function MyViewModel() {
 			allEvents.push(eventListing);
 		}
 		self.events(allEvents);
+		// Sets the results info observable to true so that the view knows to show results.
+		self.resultsInfo(true);
 		// Place marker on each event's location with performer information.
 		mapSGResults(allEvents);
 
@@ -388,6 +391,17 @@ function MyViewModel() {
 	}
 
 	google.maps.event.addDomListener(window, 'load', initialize);
+
+	// Bootstrap doesn't play nicely with google maps, so this autosizes the map
+	$(window).resize(function () {
+		var h = $(window).height(),
+		offsetTop = 30; // Calculate the top offset
+
+		$('#map-canvas').css('height', (h - offsetTop));
+		$('#results-list').css('height', (h - (offsetTop*2)));
+
+	}).resize();
+
 }
 
 var vm = new MyViewModel();
