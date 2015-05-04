@@ -40,3 +40,7 @@ a:hover {
 a:active {
     color: #FF9933;
 }
+
+.venue-name{
+	font-size:110%; color: white; display: block; background-color: #666666;
+}
