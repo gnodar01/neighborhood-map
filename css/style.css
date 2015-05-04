@@ -1,10 +1,9 @@
-html, body, .map-list {margin: auto; max-width: 1500px; padding: 0; height: 100%; position: relative;}
-#map-canvas {height: 100%;}
-
+html, body, .map-list {margin: 0; padding: 0; height: 100%; position: relative;}
+#map-canvas { height: 100%; width: 100%; margin: 0; padding: 0; position: absolute; left:0; top:0;}
 #content_header {color: orange;}
 
-.results {height: 100%; margin: 0; padding:0; position: absolute; right:0; top:0; background-color: white;}
-#results-list {overflow: auto;}
+.results {height: 100%; width: auto; margin: 0; padding:0; position: absolute; right:0; top:0; background-color: white;}
+#results-list {height: 100%; overflow:auto;}
 
 .artist_name {margin-left: 40px; margin-top: 0px; margin-bottom: 0px;}
 .performer-info {}
@@ -16,4 +15,3 @@ img {width: 200px; height: 200px;}
 
 .filled {display: none;}
 
-.event-heading {text-align: center}
