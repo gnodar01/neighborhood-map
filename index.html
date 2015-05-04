@@ -35,7 +35,7 @@
 			</div>
 		</div>
 	</div>
-	<div data-bind="if: performerInfo" class="performer-info">
+	<div data-bind="visible: performerInfo" class="performer-info">
 		<button data-bind="click: closePerformerInfo"> Back To Map </button>
 		<p class="event-heading" data-bind="visible: currentEventName">Event<br><span data-bind="text: currentEventName"></span></p>
 		<p class="event-heading" data-bind="visible: currentVenueName">Venue<br><span data-bind="text: currentVenueName"></span></p>
@@ -44,18 +44,18 @@
 		<p class="event-heading" data-bind="visible: currentPerformerName">Peformer<br><span data-bind="text: currentPerformerName"></span></p>
 		<p class="event-heading" data-bind="visible: currentPerformerGenres().length > 0">Genres<br>
 			<div data-bind="foreach: currentPerformerGenres">
-				
+				<p data-bind="text: name"></p>
 			</div>
 		</p>
-		<p class="event-heading" data-bind="visible: currentPerformerURLs">Links<br>
+		<div class="event-heading" data-bind="visible: currentPerformerURLs">Links<br>
 			<div data-bind="foreach: currentPerformerURLs">
-				<div data-bind="if: $data.lastfm_url"><a data-bind="attr: { href: lastfm_url, target:'_blank'}">Last FM</a></div>
-				<div data-bind="if: $data.mb_url"><a data-bind="attr: { href: mb_url, target:'_blank'}">MusicBrainz</a></div>
-				<div data-bind="if: $data.myspace_url"><a data-bind="attr: { href: myspace_url, target:'_blank'}">Myspace</a></div>
-				<div data-bind="if: $data.twitter_url"><a data-bind="attr: { href: twitter_url, target:'_blank'}">Twitter</a></div>
-				<div data-bind="if: $data.wikipedia_url"><a data-bind="attr: { href: wikipedia_url, target:'_blank'}">Wikipedia</a></div>
+				<p data-bind="if: $data.lastfm_url"><a data-bind="attr: { href: lastfm_url, target:'_blank'}">Last FM</a></p>
+				<p data-bind="if: $data.mb_url"><a data-bind="attr: { href: mb_url, target:'_blank'}">MusicBrainz</a></p>
+				<p data-bind="if: $data.myspace_url"><a data-bind="attr: { href: myspace_url, target:'_blank'}">Myspace</a></p>
+				<p data-bind="if: $data.twitter_url"><a data-bind="attr: { href: twitter_url, target:'_blank'}">Twitter</a></p>
+				<p data-bind="if: $data.wikipedia_url"><a data-bind="attr: { href: wikipedia_url, target:'_blank'}">Wikipedia</a></p>
 			</div>
-		</p>
+		</div>
 		<p class="event-heading" data-bind="visible: currentPerformerVideos().length > 0">Videos<br>
 			<div data-bind="foreach: currentPerformerVideos">
 					<a data-bind="attr: {href: url, target:'_blank'}"><img data-bind="attr: {src: image_url}"></a>
