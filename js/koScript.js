@@ -35,6 +35,14 @@ function MyViewModel() {
 		codeAddress(city);
 	}
 
+	self.cleanSearch = function() {
+		var newCity = self.cityVal();
+		sgCurrentPage = 1;
+		allEvents = [];
+		allMarkers = [];
+		codeAddress(newCity);
+	}
+
 	self.displayEvent = function() {
 		var eventItem = this;
 
