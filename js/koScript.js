@@ -183,8 +183,6 @@ function MyViewModel() {
 		google.maps.event.addDomListener(window, "resize", function() {
 			newCenter();
 		});
-
-
 	}
 
 	var getVenues = function() {
