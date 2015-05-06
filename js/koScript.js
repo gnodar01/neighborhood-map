@@ -8,6 +8,8 @@ function MyViewModel() {
 
 	self.events = ko.observableArray();
 	self.markers = ko.observableArray();
+	self.venues = ko.observableArray();
+	self.donkey = ["one","two","three"];
 
 	self.resultsInfo = ko.observable(false);
 	self.performerInfo = ko.observable(false);
@@ -181,6 +183,18 @@ function MyViewModel() {
 		google.maps.event.addDomListener(window, "resize", function() {
 			newCenter();
 		});
+	}
+
+	var getVenues = function() {
+		var currentEvents = allEvents;
+
+		var venueName;
+		for (var i = 0, eventsLength = currentEvents.length; i < eventsLength; i++) {
+			venueName = currentEvents[i].eventVenue.name;
+			self.venues.push(venueName);
+		}
+
+		console.log(self.venues())
 	}
 
 	// Sets the map on all markers in the array.
