@@ -183,6 +183,8 @@ function MyViewModel() {
 		google.maps.event.addDomListener(window, "resize", function() {
 			newCenter();
 		});
+
+
 	}
 
 	var getVenues = function() {
@@ -433,10 +435,11 @@ function MyViewModel() {
 	// Bootstrap doesn't play nicely with google maps, so this autosizes the map
 	$(window).resize(function () {
 		var h = $(window).height(),
-		offsetTop = 60;
+		offsetTop = 60; // Calculate the top offset
 
 		$('#map-canvas').css('height', (h - offsetTop));
 		$('#results-list').css('height', (h - (offsetTop*2)));
+
 	}).resize();
 }
 
