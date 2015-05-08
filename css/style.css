@@ -1,25 +1,69 @@
-html, body, .map-list {margin: auto; max-width: 1500px; padding: 0; height: 100%; position: relative;}
-#map-canvas {height: 100%;}
+html, body, .map-list {
+	margin: auto;
+	max-width: 1500px;
+	padding: 0;
+	height: 100%;
+	position: relative;
+}
+#map-canvas {
+	height: 100%;
+}
 
-#content_header {color: orange;}
+#content_header {
+	color: orange;
+}
 
-.results {height: 100%; margin: 0; padding:0; position: absolute; right:0; top:0; background-color: white;}
-#results-list {overflow: auto;}
+.results {
+	height: 100%;
+	margin: 0;
+	padding:0;
+	position:
+	absolute; right:0; top:0;
+	background-color: white;
+ }
 
-.artist_name {margin-left: 40px; margin-top: 0px; margin-bottom: 0px;}
-.performer-info {}
+#results-list {
+	overflow: auto;
+}
 
-.highlight-event {background-color: #FFEBCC;}
-.highlight-performer {background-color: orange;}
+.artist_name {
+	margin-left: 40px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
 
-img {width: 200px; height: 200px;}
+.highlight-event {
+	background-color: #FFEBCC;
+}
 
-.filled {display: none;}
+.highlight-performer {
+	background-color: orange;
+}
 
-.info-heading {font-weight: bold; text-align: center;}
-.info-subheading {font-weight: bold; text-align: center; color:orange;}
+img {
+	width: 200px;
+	height: 200px;
+}
 
-.back-btn {display: block; margin: 0 auto;}
+.filled {
+	display: none;
+}
+
+.info-heading {
+	font-weight: bold;
+	text-align: center;
+}
+
+.info-subheading {
+	font-weight: bold;
+	text-align: center;
+	color:orange;
+}
+
+.back-btn {
+	display: block;
+	margin: 0 auto;
+}
 
 /* unvisited link */
 a:link {
@@ -41,6 +85,9 @@ a:active {
     color: #FF9933;
 }
 
-.venue-name{
-	font-size:110%; color: white; display: block; background-color: #666666;
+.venue-name {
+	font-size:110%;
+	color: white;
+	display: block;
+	background-color: #666666;
 }

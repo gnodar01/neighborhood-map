@@ -9,7 +9,6 @@ function MyViewModel() {
 	self.events = ko.observableArray();
 	self.markers = ko.observableArray();
 	self.venues = ko.observableArray();
-	self.donkey = ["one","two","three"];
 
 	self.resultsInfo = ko.observable(false);
 	self.performerInfo = ko.observable(false);
@@ -193,8 +192,6 @@ function MyViewModel() {
 			venueName = currentEvents[i].eventVenue.name;
 			self.venues.push(venueName);
 		}
-
-		console.log(self.venues())
 	}
 
 	// Sets the map on all markers in the array.
@@ -205,7 +202,6 @@ function MyViewModel() {
 	}
 
 	var parseENResults = function (enInfo) {
-		console.log(enInfo);
 		// Empty observables in case there is any information that cannot be overwritten by the new artist's info.
 		self.currentPerformerURLs("");
 		self.currentPerformerGenres([]);
@@ -219,7 +215,6 @@ function MyViewModel() {
 			self.currentPerformerURLs(artistURLs);
 			self.currentPerformerGenres(artistGenres);
 			self.currentPerformerVideos(artistVideos);
-			console.log(self.currentPerformerVideos())
 		}
 	}
 
@@ -363,11 +358,6 @@ function MyViewModel() {
 		self.resultsInfo(true);
 		// Place marker on each event's location with performer information.
 		mapSGResults(allEvents);
-
-		//-----------------------------//
-			console.log(allEvents);
-		//-----------------------------//
-
 	}
 
 	// Runs the SeatGeek api, and returns a list of 25 events near the city the user inputted (after geocoding).

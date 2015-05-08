@@ -23,7 +23,7 @@
 					</div>
 					<div data-bind="css: {'col-md-7': resultsInfo}" id="map-canvas"></div>
 					<div class="col-md-5" "results" data-bind="if: resultsInfo">
-						<input class="form-group" type="text" placeholder="Venue Name" data-bind="value: venueVal">
+						<input class="form-group" id="venue" type="text" placeholder="Venue Name" data-bind="value: venueVal">
 						<button class="btn btn-warning btn-sm" data-bind="click: filterVenues">Set Filter</button>
 						<button class="btn btn-warning btn-sm" data-bind="click: removeFilter">Remove Filter</button>
 						<div id="results-list" data-bind="foreach: events">
