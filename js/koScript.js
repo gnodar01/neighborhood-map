@@ -68,13 +68,13 @@ function MyViewModel() {
 		// If an info window is open, close it and set it to current event's info window.
 		if (currentInfoWindow) {
 			currentInfoWindow.close();
-			currentInfoWindow = marker.info;
+			currentInfoWindow = marker.eventInfo;
 		}
 		else {
-			currentInfoWindow = marker.info;
+			currentInfoWindow = marker.eventInfo;
 		}
 		// Open current event's info window.
-		marker.info.open(map,marker)
+		marker.eventInfo.open(map,marker)
 		map.setCenter(marker.position);
 
 		self.currentEventDate(currentEvent.eventDate);
@@ -239,9 +239,23 @@ function MyViewModel() {
 		})
 	}
 
+	// Displays venue name.
+	var displayVenue = function(marker) {
+		// If an info window is open, close it and set it to current event's info window.
+		if (currentInfoWindow) {
+			currentInfoWindow.close();
+			currentInfoWindow = marker.venueInfo;
+		}
+		else {
+			currentInfoWindow = marker.venueInfo;
+		}
+		marker.venueInfo.open(map,marker)
+		map.setCenter(marker.position);
+	}
+
 	// Make marker and corresponding info window for each event location.
 	var mapSGResults = function(eventData) {
-		var eventMarker, contentString, eventLat, eventLng, eventLatLng;
+		var eventMarker, eventLat, eventLng, eventLatLng;
 
 		// All events are passed in, so if on second page of results, it need to start where new page's events begin
 		for (var i = 0 + (50 * sgCurrentPage - 50), eventDataLen = eventData.length; i < eventDataLen; i++) {
@@ -258,13 +272,25 @@ function MyViewModel() {
 				icon: "images/green-dot.png"
 			});
 
-			// New info window for each event, with it's correspoinding contentString.
-			eventMarker.info = new google.maps.InfoWindow({
+			// New info window for each event. Will load with event title.
+			eventMarker.eventInfo = new google.maps.InfoWindow({
 				// HTML that provides markup for event information displayed in the google maps info window.
 				// The button will access the view model's openPerformerInfo function
 				content: "<div id='content'>" +
 				"<h1 id='content_header'>" + eventData[i].eventTitle + "</h1>" +
 				"<button onclick=vm.openPerformerInfo()>Artist Info</button>"
+			});
+
+			// New info window for each venue. Will load with venue name.
+			eventMarker.venueInfo = new google.maps.InfoWindow({
+				content: "<div id='content'>" +
+				"<h1 id='content_header'>" + eventData[i].eventVenue.name + "</h1>"
+			})
+
+			// Event listner on marker. When clicked, venue information will be loaded
+			google.maps.event.addListener(eventMarker, 'click', function() {
+				var currentMarker = this;
+				displayVenue(currentMarker);
 			});
 
 			// Push to array of all markers.
