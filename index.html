@@ -42,12 +42,12 @@
 		<div data-bind="visible: currentVenueAddress"><h2 class="info-heading">Address</h2><p class="info-subheading" data-bind="text: currentVenueAddress"></p></div>
 		<div data-bind="visible: currentEventDate"><h2 class="info-heading">Date - Time</h2><p class="info-subheading" data-bind="text: currentEventDate"></p></div>
 		<div data-bind="visible: currentPerformerName"><h2 class="info-heading">Peformer</h2><p class="info-subheading" data-bind="text: currentPerformerName"></p></div>
-		<div data-bind="visible: currentPerformerGenres().length > 0"><h2 class="info-heading">Performer Genres</h2>
+		<div data-bind="visible: currentPerformerGenres().length > 0"><h2 class="info-heading">Genres</h2>
 			<div data-bind="foreach: currentPerformerGenres">
 				<p class="info-subheading" data-bind="text: name"></p>
 			</div>
 		</div>
-		<div data-bind="visible: currentPerformerURLs"><h2 class="info-heading">Links</h2>
+		<div data-bind="visible: currentPerformerURLs().length > 0"><h2 class="info-heading">Links</h2>
 			<div data-bind="foreach: currentPerformerURLs">
 				<p class="info-subheading" data-bind="if: $data.lastfm_url"><a data-bind="attr: { href: lastfm_url, target:'_blank'}">Last FM</a></p>
 				<p class="info-subheading" data-bind="if: $data.mb_url"><a data-bind="attr: { href: mb_url, target:'_blank'}">MusicBrainz</a></p>

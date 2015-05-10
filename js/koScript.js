@@ -18,7 +18,7 @@ function MyViewModel() {
 	self.currentPerformerID = ko.observable();
 	self.currentVenueAddress = ko.observable();
 	self.currentPerformerName = ko.observable();
-	self.currentPerformerURLs = ko.observable();
+	self.currentPerformerURLs = ko.observableArray();
 	self.currentPerformerGenres = ko.observableArray();
 	self.currentPerformerVideos = ko.observableArray();
 
@@ -145,6 +145,8 @@ function MyViewModel() {
 	self.openPerformerInfo = function() {
 		// When performerInfo is true, the css changes to performer info view.
 		self.performerInfo(true);
+		var donkey = self.currentPerformerURLs();
+		console.log(donkey)
 	}
 
 	self.closePerformerInfo = function() {
@@ -471,7 +473,7 @@ function MyViewModel() {
 
 	var parseENResults = function (enInfo) {
 		// Empty observables in case there is any information that cannot be overwritten by the new artist's info.
-		self.currentPerformerURLs(null);
+		self.currentPerformerURLs([]);
 		self.currentPerformerGenres([]);
 		self.currentPerformerVideos([]);
 		// A status code of 0 means that the artist info was successfully found.
@@ -480,7 +482,9 @@ function MyViewModel() {
 			var artistURLs = artistData.urls,
 				artistGenres = artistData.genres,		
 				artistVideos = artistData.video;
-			self.currentPerformerURLs(artistURLs);
+			/* artistGenres and artistVideos are already arrays, so the obsrvable arrays may simply be set to them;
+			 artistGenres is not an array, it is an object, so it must be pushed to the observable array. */
+			self.currentPerformerURLs().push(artistURLs);
 			self.currentPerformerGenres(artistGenres);
 			self.currentPerformerVideos(artistVideos);
 		}
