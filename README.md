@@ -1,7 +1,7 @@
 # Music Events Near You
 ## Running the App
 1. Type in your City or Address and press "Show Me The Music!"
-- The City and Map are by default set to Orlando. It's where I live, so I'd like it to be the default when I share with friends.
+* The City and Map are by default set to Orlando. It's where I live, so I'd like it to be the default when I share with friends.
 - When "Show Me The Music!" is clicked, new buttons, a filter bar, and a list of music events will appear. Markers will also be placed on the map showing where each event venue is located.
 - In grey are the venue names, and below are the individual performers playing at each event.
 2. Clicking on the markers will show you the venue that it refers to.
