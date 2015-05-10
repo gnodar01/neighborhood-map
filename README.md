@@ -32,7 +32,7 @@
 3. Knockout
 
 ## Articles
-1. [Private Members in Javascript]: (http://javascript.crockford.com/private.html)
-2. [Stack Overflow question I posted]: (http://stackoverflow.com/questions/30008144/jquery-ajax-data-object-with-multiple-values-for-the-same-key)
-3. [Centering google map on resize]: (http://stackoverflow.com/questions/8792676/center-google-maps-v3-on-browser-resize-responsive)
-4. [Ajax error handling]: (http://cypressnorth.com/programming/global-ajax-error-handling-with-jquery/)
+1. [Private Members in Javascript](http://javascript.crockford.com/private.html)
+2. [Stack Overflow question I posted](http://stackoverflow.com/questions/30008144/jquery-ajax-data-object-with-multiple-values-for-the-same-key)
+3. [Centering google map on resize](http://stackoverflow.com/questions/8792676/center-google-maps-v3-on-browser-resize-responsive)
+4. [Ajax error handling](http://cypressnorth.com/programming/global-ajax-error-handling-with-jquery/)
