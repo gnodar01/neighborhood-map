@@ -8,7 +8,6 @@ function MyViewModel() {
 
 	self.events = ko.observableArray();
 	self.markers = ko.observableArray();
-	self.venues = ko.observableArray();
 
 	self.resultsInfo = ko.observable(false);
 	self.performerInfo = ko.observable(false);
@@ -36,11 +35,14 @@ function MyViewModel() {
 		codeAddress(city);
 	}
 
+	// Cleans out data from previous city search, and runs search on new city.
 	self.cleanSearch = function() {
 		var newCity = self.cityVal();
 		sgCurrentPage = 1;
 		allEvents = [];
 		allMarkers = [];
+		setAllMap(null);
+		self.currentEventIndex(null);
 		codeAddress(newCity);
 	}
 
@@ -86,6 +88,7 @@ function MyViewModel() {
 
 		self.currentPerformerName(currentPerformer.performerName);
 
+		// Search and get data from EchoNest API on this artist
 		searchEchoNest(performerID);
 	}
 
@@ -123,18 +126,24 @@ function MyViewModel() {
 	self.removeFilter = function() {
 		self.events(allEvents);
 		self.markers(allMarkers);
-		// Remove all markers before repopulating to avoid doubling up on markers.
+		// Remove all markers before re-populating to avoid doubling up on markers.
 		setAllMap(null);
 		setAllMap(map);
 	}
 
 	self.openPerformerInfo = function() {
+		// When performerInfo is true, the css changes to performer info view.
 		self.performerInfo(true);
 	}
 
 	self.closePerformerInfo = function() {
+		// When performerInfo is false, the css changes to map view
 		self.performerInfo(false);
+		// Re-initializes the map
 		initialize();
+		// Re-Sets marker on current city
+		setCityMarker();
+		// Re-sets all event markers to map
 		setAllMap(map);
 	}
 
@@ -143,13 +152,19 @@ function MyViewModel() {
 	var geocoder, map;
 	// When and info window is opened, currentInfoWindow will be set to it.
 	var currentInfoWindow;
+	// Current city coordinates
+	var cityLat = 28.4158, cityLng = -81.2989;
+	// Holds marker of current city
+	var cityMarker;
+	// Holds all events, and event markers
 	var allEvents = [], allMarkers = [];
 	// Keeps track of which page on seet geek results we're currently on
 	var sgCurrentPage = 0;
 
+	// Initializes Google Map
 	var initialize = function () {
 		geocoder = new google.maps.Geocoder();
-		var latlng = new google.maps.LatLng(28.4158, -81.2989);
+		var latlng = new google.maps.LatLng(cityLat, cityLng);
 		var mapOptions = {
 			zoom: 10,
 			center: latlng,
@@ -184,120 +199,75 @@ function MyViewModel() {
 		});
 	}
 
-	var getVenues = function() {
-		var currentEvents = allEvents;
+	/* Takes city, geocodes it, gets the lat & lng coords, sets a marker on that location in the map,
+	 and runs the search SeatGeek function on those coords. */
+	var codeAddress = function (city) {
+		geocoder.geocode( {'address': city}, function(results, status) {
+		    if (status === google.maps.GeocoderStatus.OK) {
+		    	resultsLocation = results[0].geometry.location 
+		    	cityLat = resultsLocation.lat();
+		    	cityLng = resultsLocation.lng();
 
-		var venueName;
-		for (var i = 0, eventsLength = currentEvents.length; i < eventsLength; i++) {
-			venueName = currentEvents[i].eventVenue.name;
-			self.venues.push(venueName);
-		}
+				/* Centers and sets a marker in the map on the geocoded address inputed by the user.
+				 results[0] is set because the geocoded address may contain more than one possible 
+				 result. The first result has the highest probability of being correct, and there
+				 is usually no need to use the others. */
+				map.setCenter(resultsLocation);
+				setCityMarker();
+		    } 
+			else {
+				alert("Geocode was not successful for the following reason: " + status);
+			}
+
+			// Run the Seat Geek API and get data of artists/music events in current city
+			searchSeatGeek(cityLat,cityLng);
+		});
 	}
 
-	// Sets the map on all markers in the array.
-	var setAllMap = function(map) {
-		for (var i = 0; i < self.markers().length; i++) {
-			self.markers()[i].setMap(map);
+	// Sets marker on current city.
+	var setCityMarker = function() {
+		var latLng = new google.maps.LatLng(cityLat, cityLng);
+
+		// Remove marker placed on current city, if it exists
+		if (cityMarker) {
+			cityMarker.setMap(null);
 		}
+
+		// Set marker on new city
+		cityMarker = new google.maps.Marker({
+			map: map,
+			position: latLng,
+			icon: "images/blue-dot.png"
+		});
 	}
 
-	var parseENResults = function (enInfo) {
-		// Empty observables in case there is any information that cannot be overwritten by the new artist's info.
-		self.currentPerformerURLs("");
-		self.currentPerformerGenres([]);
-		self.currentPerformerVideos([]);
-		// A status code of 0 means that the artist info was successfully found.
-		if (enInfo.response.status.code === 0) {
-			var artistData = enInfo.response.artist;
-			var artistURLs = artistData.urls,
-				artistGenres = artistData.genres,		
-				artistVideos = artistData.video;
-			self.currentPerformerURLs(artistURLs);
-			self.currentPerformerGenres(artistGenres);
-			self.currentPerformerVideos(artistVideos);
+	// Runs the SeatGeek api, and returns a list of 25 events near the city the user inputted (after geocoding).
+	var searchSeatGeek = function(lat,lng) {
+		/* SeatGeeks api has a list of taxonomies you can search through. These are event types like races, dance events, plays, concerts, etc.
+		Only music related events are needed so it must be specified in the api call. The taxonomies array includes all music related taxonomies
+		that are returned by SeatGeek. Each taxonomy is looped through, with an added search query, and appended to the full query, which is then
+		appended to the full URL for the api call. */
+		var taxonomies = ['concert','music_festival','classical','classical_opera','classical_vocal','classical_orchestral_instrumental'];
+
+		function getResults (results) {
+			parseSGResults(results);
 		}
-	}
 
-	var searchEchoNest = function(enID) {
-		var enKey = "2QHXFMFAW2PDSCYKW";
-		var performerID = "seatgeek:artist:" + enID;
-		var enSearchQuery = "http://developer.echonest.com/api/v4/artist/profile?";
-
-		var enData = {
-			api_key: enKey,
-			id: performerID,
-			format: 'json',
-			bucket: ["urls","video","genre"]
+		var sgData = {
+			per_page: 50,
+			'taxonomies.name': taxonomies,
+			lat: lat,
+			lon: lng,
+			page: sgCurrentPage
 		}
 
 		$.ajax({
-			url: enSearchQuery,
-			data: enData,
-			success: parseENResults,
+			url: "http://api.seatgeek.com/2/events",
 			dataType: 'json',
-			traditional: true
-		})
-	}
-
-	// Displays venue name.
-	var displayVenue = function(marker) {
-		// If an info window is open, close it and set it to current event's info window.
-		if (currentInfoWindow) {
-			currentInfoWindow.close();
-			currentInfoWindow = marker.venueInfo;
-		}
-		else {
-			currentInfoWindow = marker.venueInfo;
-		}
-		marker.venueInfo.open(map,marker)
-		map.setCenter(marker.position);
-	}
-
-	// Make marker and corresponding info window for each event location.
-	var mapSGResults = function(eventData) {
-		var eventMarker, eventLat, eventLng, eventLatLng;
-
-		// All events are passed in, so if on second page of results, it need to start where new page's events begin
-		for (var i = 0 + (50 * sgCurrentPage - 50), eventDataLen = eventData.length; i < eventDataLen; i++) {
-			eventLat = eventData[i].eventVenue.lat;
-			eventLng = eventData[i].eventVenue.lng;
-			// Construct a lat/long object using google maps LatLng class.
-			eventLatLng = new google.maps.LatLng(eventLat, eventLng);
-
-			// Place event marker on map with custom icon to differentiate it.
-			// Todo: create custom icon for each genre.
-			eventMarker = new google.maps.Marker({
-				map: map,
-				position: eventLatLng,
-				icon: "images/green-dot.png"
-			});
-
-			// New info window for each event. Will load with event title.
-			eventMarker.eventInfo = new google.maps.InfoWindow({
-				// HTML that provides markup for event information displayed in the google maps info window.
-				// The button will access the view model's openPerformerInfo function
-				content: "<div id='content'>" +
-				"<h1 id='content_header'>" + eventData[i].eventTitle + "</h1>" +
-				"<button onclick=vm.openPerformerInfo()>Artist Info</button>"
-			});
-
-			// New info window for each venue. Will load with venue name.
-			eventMarker.venueInfo = new google.maps.InfoWindow({
-				content: "<div id='content'>" +
-				"<h1 id='content_header'>" + eventData[i].eventVenue.name + "</h1>"
-			})
-
-			// Event listner on marker. When clicked, venue information will be loaded
-			google.maps.event.addListener(eventMarker, 'click', function() {
-				var currentMarker = this;
-				displayVenue(currentMarker);
-			});
-
-			// Push to array of all markers.
-			allMarkers.push(eventMarker);
-		}
-		// Set to observable array for filtering.
-		self.markers(allMarkers);
+			data: sgData,
+			traditional: true,
+			success: getResults
+		});
 	}
 
 	/* Parse the data response from the API call, and form an array of event objects
@@ -386,62 +356,110 @@ function MyViewModel() {
 		mapSGResults(allEvents);
 	}
 
-	// Runs the SeatGeek api, and returns a list of 25 events near the city the user inputted (after geocoding).
-	var searchSeatGeek = function(lat,lng) {
-		/* SeatGeeks api has a list of taxonomies you can search through. These are event types like races, dance events, plays, concerts, etc.
-		Only music related events are needed so it must be specified in the api call. The taxonomies array includes all music related taxonomies
-		that are returned by SeatGeek. Each taxonomy is looped through, with an added search query, and appended to the full query, which is then
-		appended to the full URL for the api call. */
-		var taxonomies = ['concert','music_festival','classical','classical_opera','classical_vocal','classical_orchestral_instrumental'];
+	// Make marker and corresponding info window for each event location.
+	var mapSGResults = function(eventData) {
+		var eventMarker, eventLat, eventLng, eventLatLng;
 
-		function getResults (results) {
-			parseSGResults(results);
+		// All events are passed in, so if on second page of results, it need to start where new page's events begin
+		for (var i = 0 + (50 * sgCurrentPage - 50), eventDataLen = eventData.length; i < eventDataLen; i++) {
+			eventLat = eventData[i].eventVenue.lat;
+			eventLng = eventData[i].eventVenue.lng;
+			// Construct a lat/long object using google maps LatLng class.
+			eventLatLng = new google.maps.LatLng(eventLat, eventLng);
+
+			// Place event marker on map with custom icon to differentiate it.
+			// Todo: create custom icon for each genre.
+			eventMarker = new google.maps.Marker({
+				map: map,
+				position: eventLatLng,
+				icon: "images/green-dot.png"
+			});
+
+			// New info window for each event. Will load with event title.
+			eventMarker.eventInfo = new google.maps.InfoWindow({
+				// HTML that provides markup for event information displayed in the google maps info window.
+				// The button will access the view model's openPerformerInfo function
+				content: "<div id='content'>" +
+				"<h1 id='content_header'>" + eventData[i].eventTitle + "</h1>" +
+				"<button onclick=vm.openPerformerInfo()>Artist Info</button>"
+			});
+
+			// New info window for each venue. Will load with venue name.
+			eventMarker.venueInfo = new google.maps.InfoWindow({
+				content: "<div id='content'>" +
+				"<h1 id='content_header'>" + eventData[i].eventVenue.name + "</h1>"
+			})
+
+			// Event listner on marker. When clicked, venue information will be loaded
+			google.maps.event.addListener(eventMarker, 'click', function() {
+				var currentMarker = this;
+				displayVenue(currentMarker);
+			});
+
+			// Push to array of all markers.
+			allMarkers.push(eventMarker);
 		}
+		// Set to observable array for filtering.
+		self.markers(allMarkers);
+	}
 
-		var sgData = {
-			per_page: 50,
-			'taxonomies.name': taxonomies,
-			lat: lat,
-			lon: lng,
-			page: sgCurrentPage
+	// Displays venue name in info window.
+	var displayVenue = function(marker) {
+		// If an info window is open, close it and set it to current event's info window.
+		if (currentInfoWindow) {
+			currentInfoWindow.close();
+			currentInfoWindow = marker.venueInfo;
+		}
+		else {
+			currentInfoWindow = marker.venueInfo;
+		}
+		marker.venueInfo.open(map,marker)
+		map.setCenter(marker.position);
+	}
+
+	// Sets all markers in view to map
+	var setAllMap = function(map) {
+		for (var i = 0; i < self.markers().length; i++) {
+			self.markers()[i].setMap(map);
+		}
+	}
+
+	var searchEchoNest = function(enID) {
+		var enKey = "2QHXFMFAW2PDSCYKW";
+		var performerID = "seatgeek:artist:" + enID;
+		var enSearchQuery = "http://developer.echonest.com/api/v4/artist/profile?";
+
+		var enData = {
+			api_key: enKey,
+			id: performerID,
+			format: 'json',
+			bucket: ["urls","video","genre"]
 		}
 
 		$.ajax({
-			url: "http://api.seatgeek.com/2/events",
+			url: enSearchQuery,
+			data: enData,
+			success: parseENResults,
 			dataType: 'json',
-			data: sgData,
-			traditional: true,
-			success: getResults
-		});
+			traditional: true
+		})
 	}
 
-	/* Takes city, geocodes it, gets the lat & lng coords, sets a marker on that location in the map,
-	 and runs the search SeatGeek function on those coords. */
-	var codeAddress = function (city) {
-		geocoder.geocode( {'address': city}, function(results, status) {
-		    if (status === google.maps.GeocoderStatus.OK) {
-		    	resultsLocation = results[0].geometry.location
-		      
-		    	cityLat = resultsLocation.lat();
-		    	cityLng = resultsLocation.lng();
-
-				/* Centers and sets a marker in the map on the geocoded address inputed by the user.
-				 results[0] is set because the geocoded address may contain more than one possible 
-				 result. The first result has the highest probability of being correct, and there
-				 is usually no need to use the others. */
-				map.setCenter(resultsLocation);
-				var marker = new google.maps.Marker({
-					map: map,
-					position: resultsLocation,
-					icon: "images/blue-dot.png"
-				});
-		    } 
-			else {
-				alert("Geocode was not successful for the following reason: " + status);
-			}
-
-			searchSeatGeek(cityLat,cityLng);
-		});
+	var parseENResults = function (enInfo) {
+		// Empty observables in case there is any information that cannot be overwritten by the new artist's info.
+		self.currentPerformerURLs(null);
+		self.currentPerformerGenres([]);
+		self.currentPerformerVideos([]);
+		// A status code of 0 means that the artist info was successfully found.
+		if (enInfo.response.status.code === 0) {
+			var artistData = enInfo.response.artist;
+			var artistURLs = artistData.urls,
+				artistGenres = artistData.genres,		
+				artistVideos = artistData.video;
+			self.currentPerformerURLs(artistURLs);
+			self.currentPerformerGenres(artistGenres);
+			self.currentPerformerVideos(artistVideos);
+		}
 	}
 
 	google.maps.event.addDomListener(window, 'load', initialize);
@@ -453,7 +471,6 @@ function MyViewModel() {
 
 		$('#map-canvas').css('height', (h - offsetTop));
 		$('#results-list').css('height', (h - (offsetTop*2)));
-
 	}).resize();
 }
 
