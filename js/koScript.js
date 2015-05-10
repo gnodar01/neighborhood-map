@@ -403,7 +403,7 @@ function MyViewModel() {
 				// The button will access the view model's openPerformerInfo function
 				content: "<div id='content'>" +
 				"<h1 id='content_header'>" + eventData[i].eventTitle + "</h1>" +
-				"<button onclick=vm.openPerformerInfo()>Artist Info</button>"
+				"<button onclick=vm.openPerformerInfo()>Get Info</button>"
 			});
 
 			// New info window for each venue. Will load with venue name.
