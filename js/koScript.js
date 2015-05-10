@@ -92,6 +92,15 @@ function MyViewModel() {
 		searchEchoNest(performerID);
 	}
 
+	// Displays clicked venue name in marker's info window on map
+	self.displayVenue = function() {
+		var venue = this;
+		var venueIndex = venue.eventIndex;
+		var venueMarker = allMarkers[venueIndex];
+
+		showVenueWindow(venueMarker);
+	}
+
 	self.filterVenues = function() {
 		// In case there is another filter, it should be removed before re-filtering.
 		self.removeFilter();
@@ -307,7 +316,8 @@ function MyViewModel() {
 			var eventListing = {
 				eventTitle: currentEvent.title,
 				eventType: currentEvent.type,
-				eventURL: currentEvent.url
+				eventURL: currentEvent.url,
+				eventIndex: i
 			};
 
 			/* If the event date is flagged true by SeatGeek, then the show date is an estimate;
@@ -362,6 +372,7 @@ function MyViewModel() {
 
 		// All events are passed in, so if on second page of results, it need to start where new page's events begin
 		for (var i = 0 + (50 * sgCurrentPage - 50), eventDataLen = eventData.length; i < eventDataLen; i++) {
+			// Seat Geek data includes lat/lng coordinates with event
 			eventLat = eventData[i].eventVenue.lat;
 			eventLng = eventData[i].eventVenue.lng;
 			// Construct a lat/long object using google maps LatLng class.
@@ -393,7 +404,7 @@ function MyViewModel() {
 			// Event listner on marker. When clicked, venue information will be loaded
 			google.maps.event.addListener(eventMarker, 'click', function() {
 				var currentMarker = this;
-				displayVenue(currentMarker);
+				showVenueWindow(currentMarker);
 			});
 
 			// Push to array of all markers.
@@ -404,7 +415,7 @@ function MyViewModel() {
 	}
 
 	// Displays venue name in info window.
-	var displayVenue = function(marker) {
+	var showVenueWindow = function(marker) {
 		// If an info window is open, close it and set it to current event's info window.
 		if (currentInfoWindow) {
 			currentInfoWindow.close();
