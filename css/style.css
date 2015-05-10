@@ -40,11 +40,6 @@ html, body, .map-list {
 	background-color: orange;
 }
 
-img {
-	width: 200px;
-	height: 200px;
-}
-
 .filled {
 	display: none;
 }
@@ -58,6 +53,16 @@ img {
 	font-weight: bold;
 	text-align: center;
 	color:orange;
+}
+
+.videos-list {
+	text-align: center;
+}
+
+.videos {
+	margin: 10px 40px;
+	width: 200px;
+	height: 200px;
 }
 
 .back-btn {
