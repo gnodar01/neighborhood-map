@@ -30,7 +30,7 @@
 							<div>
 								<span class="venue-name" data-bind="text: eventVenue.name, click: $root.displayVenue"></span>
 								<div data-bind="foreach: eventPerformers">
-									<div class="artist_name" data-bind="text: performerName, click: $root.displayEvent, css: { 'highlight-event': eventIndex === $root.currentEventIndex(), 'highlight-performer': performerID === $root.currentPerformerID() }">
+									<div class="artist-name" data-bind="text: performerName, click: $root.displayEvent, css: { 'highlight-event': eventIndex === $root.currentEventIndex(), 'highlight-performer': performerID === $root.currentPerformerID() }">
 									</div>
 								</div>
 							</div>

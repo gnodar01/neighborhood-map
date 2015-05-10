@@ -26,10 +26,19 @@ html, body, .map-list {
 	overflow: auto;
 }
 
-.artist_name {
+.venue-name {
+	font-size:110%;
+	color: white;
+	display: block;
+	background-color: #666666;
+	cursor:pointer;
+}
+
+.artist-name {
 	margin-left: 40px;
 	margin-top: 0px;
 	margin-bottom: 0px;
+	cursor:pointer;
 }
 
 .highlight-event {
@@ -88,11 +97,4 @@ a:hover {
 /* selected link */
 a:active {
     color: #FF9933;
-}
-
-.venue-name {
-	font-size:110%;
-	color: white;
-	display: block;
-	background-color: #666666;
 }
