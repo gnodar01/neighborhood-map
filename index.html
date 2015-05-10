@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"> 
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
   	<title>Find Music Events Around You, by genre!</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<script src="js/knockout.js"></script>
@@ -19,9 +19,9 @@
 			</span>
 			<button class="btn btn-warning btn-sm" data-bind="click: runSearch, text: searchButtonText"></button>
 		</div>
-		<div class="results" data-bind="if: resultsInfo">
+		<div data-bind="if: resultsInfo, css: {'results': resultsInfo}">
 			<input class="form-control" id="venue" type="text" placeholder="Venue Name" data-bind="value: venueVal">
-			<button class="btn btn-warning btn-sm filter-btn" data-bind="click: filterVenues">Set Filter</button>
+			<button class="btn btn-warning btn-sm filter-btn" data-bind="click: filterVenues">Apply Filter</button>
 			<button class="btn btn-warning btn-sm filter-btn" data-bind="click: removeFilter">Remove Filter</button>
 			<div id="results-list" data-bind="foreach: events">
 				<div>
