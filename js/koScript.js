@@ -487,7 +487,6 @@ function MyViewModel() {
 	}
 
 	google.maps.event.addDomListener(window, 'load', initialize);
-
 }
 
 var vm = new MyViewModel();
