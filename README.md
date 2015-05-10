@@ -27,9 +27,9 @@
 3. [Google Map Javascript API](https://developers.google.com/maps/documentation/javascript/)
 
 ### Libraries/Frameworks
-1. jQuery
-2. Bootstrap
-3. Knockout
+1. [jQuery](https://jquery.com/)
+2. [Bootstrap](http://getbootstrap.com/)
+3. [Knockout](http://knockoutjs.com/)
 
 ## Articles
 1. [Private Members in Javascript](http://javascript.crockford.com/private.html)
