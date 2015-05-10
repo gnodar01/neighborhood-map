@@ -170,6 +170,17 @@ function MyViewModel() {
 	// Keeps track of which page on seet geek results we're currently on
 	var sgCurrentPage = 0;
 
+	$(function () {
+		//setup ajax error handling
+		$.ajaxSetup({
+			error: function (xhr, status, error) {
+				console.log(xhr);
+				alert( "Something went wrong, and it's entirely your fault\n"
+				+ "Status: " + xhr.status + " - " + status + " " + error );
+			}
+		});
+	});
+
 	// Initializes Google Map
 	var initialize = function () {
 		geocoder = new google.maps.Geocoder();
