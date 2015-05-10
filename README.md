@@ -36,3 +36,4 @@
 2. [Stack Overflow question I posted](http://stackoverflow.com/questions/30008144/jquery-ajax-data-object-with-multiple-values-for-the-same-key)
 3. [Centering google map on resize](http://stackoverflow.com/questions/8792676/center-google-maps-v3-on-browser-resize-responsive)
 4. [Ajax error handling](http://cypressnorth.com/programming/global-ajax-error-handling-with-jquery/)
+5. [Post I made on Udacity Discussions Board](http://discussions.udacity.com/t/help-with-figuring-out-how-to-use-this-api/16272) - Ended up not working out.
