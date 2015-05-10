@@ -1,12 +1,11 @@
 html, body, .map-list {
 	margin: auto;
-	max-width: 1500px;
-	padding: 0;
 	height: 100%;
 	position: relative;
 }
 #map-canvas {
 	height: 100%;
+	width: 100%;
 }
 
 #content_header {
@@ -16,7 +15,7 @@ html, body, .map-list {
 .results {
 	height: 100%;
 	margin: 0;
-	padding:0;
+	padding: 0;
 	position:
 	absolute; right:0; top:0;
 	background-color: white;
