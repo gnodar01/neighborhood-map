@@ -11,70 +11,59 @@
 	<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-	<div class="container">
-			<div data-bind="if: !performerInfo(), css: {'map-list': !performerInfo()}">
-				<div class="row">
-					<div class="location-input" data-bind="ifnot: performerInfo()">
-						<input class="form-group" type="text" data-bind="value: cityVal">
-						<span data-bind="if: events().length > 0">
-							<button class="btn btn-warning btn-sm" data-bind="click: cleanSearch">Change Neighborhood</button>
-						</span>
-						<button class="btn btn-warning btn-sm" data-bind="click: runSearch, text: searchButtonText"></button>
-					</div>
-					<div data-bind="css: {'col-md-7': resultsInfo}" id="map-canvas"></div>
-					<div class="col-md-5" "results" data-bind="if: resultsInfo">
-						<input class="form-group" id="venue" type="text" placeholder="Venue Name" data-bind="value: venueVal">
-						<button class="btn btn-warning btn-sm" data-bind="click: filterVenues">Set Filter</button>
-						<button class="btn btn-warning btn-sm" data-bind="click: removeFilter">Remove Filter</button>
-						<div id="results-list" data-bind="foreach: events">
-							<div>
-								<span class="venue-name" data-bind="text: eventVenue.name, click: $root.displayVenue"></span>
-								<div data-bind="foreach: eventPerformers">
-									<div class="artist-name" data-bind="text: performerName, click: $root.displayEvent, css: { 'highlight-event': eventIndex === $root.currentEventIndex(), 'highlight-performer': performerID === $root.currentPerformerID() }">
-									</div>
-								</div>
-							</div>
+	<div data-bind="if: !performerInfo(), css: {'map-list': !performerInfo()}">
+		<div class="location-input" data-bind="ifnot: performerInfo()">
+			<input class="form-control" type="text" data-bind="value: cityVal">
+			<span data-bind="if: events().length > 0">
+				<button class="btn btn-warning btn-sm" data-bind="click: cleanSearch">Change Neighborhood</button>
+			</span>
+			<button class="btn btn-warning btn-sm" data-bind="click: runSearch, text: searchButtonText"></button>
+		</div>
+		<div class="results" data-bind="if: resultsInfo">
+			<input class="form-control" id="venue" type="text" placeholder="Venue Name" data-bind="value: venueVal">
+			<button class="btn btn-warning btn-sm filter-btn" data-bind="click: filterVenues">Set Filter</button>
+			<button class="btn btn-warning btn-sm filter-btn" data-bind="click: removeFilter">Remove Filter</button>
+			<div id="results-list" data-bind="foreach: events">
+				<div>
+					<span class="venue-name" data-bind="text: eventVenue.name, click: $root.displayVenue"></span>
+					<div data-bind="foreach: eventPerformers">
+						<div class="artist-name" data-bind="text: performerName, click: $root.displayEvent, css: { 'highlight-event': eventIndex === $root.currentEventIndex(), 'highlight-performer': performerID === $root.currentPerformerID() }">
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="row">
-			<div data-bind="visible: performerInfo" class="performer-info">
-				<div class="col-md-12">
-					<button class="btn btn-warning back-btn" data-bind="click: closePerformerInfo"> Back To Map </button>
-				</div>
-				<div class="col-md-12">
-					<div data-bind="visible: currentEventName"><h2 class="info-heading">Event</h2><p class="info-subheading" data-bind="text: currentEventName"></p></div>
-					<div data-bind="visible: currentVenueName"><h2 class="info-heading">Venue</h2><p class="info-subheading" data-bind="text: currentVenueName"></p></div>
-					<div data-bind="visible: currentVenueAddress"><h2 class="info-heading">Address</h2><p class="info-subheading" data-bind="text: currentVenueAddress"></p></div>
-					<div data-bind="visible: currentEventDate"><h2 class="info-heading">Date - Time</h2><p class="info-subheading" data-bind="text: currentEventDate"></p></div>
-					<div data-bind="visible: currentPerformerName"><h2 class="info-heading">Peformer</h2><p class="info-subheading" data-bind="text: currentPerformerName"></p></div>
-					<div data-bind="visible: currentPerformerGenres().length > 0"><h2 class="info-heading">Performer Genres</h2>
-						<div data-bind="foreach: currentPerformerGenres">
-							<p class="info-subheading" data-bind="text: name"></p>
-						</div>
-					</div>
-					<div data-bind="visible: currentPerformerURLs"><h2 class="info-heading">Links</h2>
-						<div data-bind="foreach: currentPerformerURLs">
-							<p class="info-subheading" data-bind="if: $data.lastfm_url"><a data-bind="attr: { href: lastfm_url, target:'_blank'}">Last FM</a></p>
-							<p class="info-subheading" data-bind="if: $data.mb_url"><a data-bind="attr: { href: mb_url, target:'_blank'}">MusicBrainz</a></p>
-							<p class="info-subheading" data-bind="if: $data.myspace_url"><a data-bind="attr: { href: myspace_url, target:'_blank'}">Myspace</a></p>
-							<p class="info-subheading" data-bind="if: $data.twitter_url"><a data-bind="attr: { href: twitter_url, target:'_blank'}">Twitter</a></p>
-							<p class="info-subheading" data-bind="if: $data.wikipedia_url"><a data-bind="attr: { href: wikipedia_url, target:'_blank'}">Wikipedia</a></p>
-						</div>
-					</div>
-					<div class="info-heading" data-bind="visible: currentPerformerVideos().length >0"><h2 class="info-heading">Videos</h2></div>
-					<div class="videos-list" data-bind="foreach: currentPerformerVideos">
-						<span data-bind="if: $data.image_url">
-							<a data-bind="attr: {href: url, target:'_blank'}"><img class="videos" data-bind="attr: {src: image_url}"></a>
-						</span>
-						<span data-bind="ifnot: $data.image_url">
-							<a data-bind="attr: {href: url, target:'_blank'}"><img class="videos" data-bind="attr: {src: 'images/default.jpg'}"></a>
-						</span>
-					</div>
-				</div>
+		<div id="map-canvas"></div>
+	</div>
+	<div data-bind="if: performerInfo()" class="performer-info">
+		<button class="btn btn-warning back-btn" data-bind="click: closePerformerInfo"> Back To Map </button>
+		<div data-bind="visible: currentEventName"><h2 class="info-heading">Event</h2><p class="info-subheading" data-bind="text: currentEventName"></p></div>
+		<div data-bind="visible: currentVenueName"><h2 class="info-heading">Venue</h2><p class="info-subheading" data-bind="text: currentVenueName"></p></div>
+		<div data-bind="visible: currentVenueAddress"><h2 class="info-heading">Address</h2><p class="info-subheading" data-bind="text: currentVenueAddress"></p></div>
+		<div data-bind="visible: currentEventDate"><h2 class="info-heading">Date - Time</h2><p class="info-subheading" data-bind="text: currentEventDate"></p></div>
+		<div data-bind="visible: currentPerformerName"><h2 class="info-heading">Peformer</h2><p class="info-subheading" data-bind="text: currentPerformerName"></p></div>
+		<div data-bind="visible: currentPerformerGenres().length > 0"><h2 class="info-heading">Performer Genres</h2>
+			<div data-bind="foreach: currentPerformerGenres">
+				<p class="info-subheading" data-bind="text: name"></p>
 			</div>
+		</div>
+		<div data-bind="visible: currentPerformerURLs"><h2 class="info-heading">Links</h2>
+			<div data-bind="foreach: currentPerformerURLs">
+				<p class="info-subheading" data-bind="if: $data.lastfm_url"><a data-bind="attr: { href: lastfm_url, target:'_blank'}">Last FM</a></p>
+				<p class="info-subheading" data-bind="if: $data.mb_url"><a data-bind="attr: { href: mb_url, target:'_blank'}">MusicBrainz</a></p>
+				<p class="info-subheading" data-bind="if: $data.myspace_url"><a data-bind="attr: { href: myspace_url, target:'_blank'}">Myspace</a></p>
+				<p class="info-subheading" data-bind="if: $data.twitter_url"><a data-bind="attr: { href: twitter_url, target:'_blank'}">Twitter</a></p>
+				<p class="info-subheading" data-bind="if: $data.wikipedia_url"><a data-bind="attr: { href: wikipedia_url, target:'_blank'}">Wikipedia</a></p>
+			</div>
+		</div>
+		<div class="info-heading" data-bind="visible: currentPerformerVideos().length >0"><h2 class="info-heading">Videos</h2></div>
+		<div class="videos-list" data-bind="foreach: currentPerformerVideos">
+			<span data-bind="if: $data.image_url">
+				<a data-bind="attr: {href: url, target:'_blank'}"><img class="videos" data-bind="attr: {src: image_url}"></a>
+			</span>
+			<span data-bind="ifnot: $data.image_url">
+				<a data-bind="attr: {href: url, target:'_blank'}"><img class="videos" data-bind="attr: {src: 'images/default.jpg'}"></a>
+			</span>
 		</div>
 	</div>
 	<script src="js/koScript.js"></script>

@@ -487,15 +487,6 @@ function MyViewModel() {
 	}
 
 	google.maps.event.addDomListener(window, 'load', initialize);
-
-	// Bootstrap doesn't play nicely with google maps, so this autosizes the map
-	$(window).resize(function () {
-		var h = $(window).height(),
-		offsetTop = 60; // Calculate the top offset
-
-		$('#map-canvas').css('height', (h - offsetTop));
-		$('#results-list').css('height', (h - (offsetTop*2)));
-	}).resize();
 }
 
 var vm = new MyViewModel();

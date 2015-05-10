@@ -1,12 +1,24 @@
 html, body, .map-list {
 	margin: auto;
-	max-width: 1500px;
-	padding: 0;
 	height: 100%;
 	position: relative;
 }
+
 #map-canvas {
 	height: 100%;
+	width: 100%;
+}
+
+.location-input {
+	position: fixed;
+	left: 100px;
+	right: 50%;
+	z-index: 1;
+}
+
+.form-control {
+	display:inline-block;
+	width: 20%;
 }
 
 #content_header {
@@ -15,15 +27,18 @@ html, body, .map-list {
 
 .results {
 	height: 100%;
-	margin: 0;
-	padding:0;
-	position:
-	absolute; right:0; top:0;
+	position: fixed; right:0; top:0;
 	background-color: white;
+	overflow: auto;
+	z-index: 1;
  }
 
-#results-list {
-	overflow: auto;
+#venue {
+	width: 40%;
+}
+
+.filter-btn {
+	width: 100px;
 }
 
 .venue-name {
