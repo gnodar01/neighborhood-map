@@ -19,12 +19,12 @@
 10. Click on any of the images under "Videos", and a new tab/window will appear taking you to that video.
 11. Click on the "Back To Map" button on the top, to go back to the map view.
 
-## APIs Used
+## Resources Used
+
+### APIs
 1. [SeatGeek API](http://platform.seatgeek.com/)
 2. [EchoNest API](http://developer.echonest.com/docs/v4)
 3. [Google Map Javascript API](https://developers.google.com/maps/documentation/javascript/)
-
-## Resources Used
 
 ### Libraries/Frameworks
 1. jQuery
