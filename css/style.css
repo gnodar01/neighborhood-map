@@ -18,22 +18,30 @@ a:active {
     color: #FF9933;
 }
 
-html, body, .map-list {
-	margin: auto;
+/* map */
+
+html, body, .map-view {
+	margin: 0;
+	padding: 0;
 	height: 100%;
 }
 
 #map-canvas {
 	height: 100%;
 	width: 100%;
+	position: absolute; top:0; left:0;
 }
 
 /* Location Search */
+
 .location-input {
-	display:inline-block;
-	width: 125px;
+	position: relative; top: 10px; left: 40px;
 }
 
+.results-info {
+	position: relative; top: 20px; left: 40px;
+	display: inline-block;
+}
 
 /*
 .form-control {
