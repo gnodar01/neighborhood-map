@@ -104,8 +104,10 @@ function MyViewModel() {
 	self.filterVenues = function() {
 		// In case there is another filter, it should be removed before re-filtering.
 		self.removeFilter();
-		// Close current info window.
-		currentInfoWindow.close();
+		// Close current info window, if there is one set.
+		if (currentInfoWindow) {
+			currentInfoWindow.close();
+		}
 
 		// Get the value inputted in the filter search, and set to all lower cas letters.
 		var venueFilter = self.venueVal().toLowerCase();
