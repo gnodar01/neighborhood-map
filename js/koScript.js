@@ -10,6 +10,7 @@ function MyViewModel() {
 	self.markers = ko.observableArray();
 
 	self.resultsInfo = ko.observable(false);
+	self.resultsList = ko.observable(false);
 	self.performerInfo = ko.observable(false);
 	self.currentEventName = ko.observable();
 	self.currentEventDate = ko.observable();
@@ -44,6 +45,15 @@ function MyViewModel() {
 		setAllMap(null);
 		self.currentEventIndex(null);
 		codeAddress(newCity);
+	}
+
+	self.displayResults = function() {
+		if (self.resultsList()) {
+			self.resultsList(false);
+		}
+		else {
+			self.resultsList(true);
+		}	
 	}
 
 	self.displayEvent = function() {

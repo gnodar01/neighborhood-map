@@ -24,20 +24,24 @@
 		</div>
 
 		<div class="results-info" data-bind="if: resultsInfo">
-			<div>
+			<button class="btn btn-warning btn-sm results-button" data-bind="click: displayResults">Results List</button>
+			<div data-bind="if: resultsList">
 				<input class="form-control" type="text" placeholder="Venue Name" data-bind="value: venueVal">
-				<button class="btn btn-warning btn-sm" data-bind="click: filterVenues">Apply Filter</button>
-				<button class="btn btn-warning btn-sm" data-bind="click: removeFilter">Remove Filter</button>
-			</div>
-			<div class="list-group" data-bind="foreach: events">
-				<a href="#" class="list-group-item">
-					<h4 class="venue-name" data-bind="text: eventVenue.name, click: $root.displayVenue"></h4>
-					<div data-bind="foreach: eventPerformers">
-						<div data-bind="text: performerName, click: $root.displayEvent, css: { 'highlight-event': eventIndex === $root.currentEventIndex(), 'highlight-performer': performerID === $root.currentPerformerID() }">
+				<div>
+					<button class="btn btn-warning btn-sm apply-button" data-bind="click: filterVenues">Apply Filter</button>
+					<button class="btn btn-warning btn-sm remove-button" data-bind="click: removeFilter">Remove Filter</button>
+				</div>
+				<div class="results-list" data-bind="foreach: events">
+					<a href="#" class="list-group-item">
+						<h4 class="venue-name" data-bind="text: eventVenue.name, click: $root.displayVenue"></h4>
+						<div data-bind="foreach: eventPerformers">
+							<div data-bind="text: performerName, click: $root.displayEvent, css: { 'highlight-event': eventIndex === $root.currentEventIndex(), 'highlight-performer': performerID === $root.currentPerformerID() }">
+							</div>
 						</div>
-					</div>
-				</a>
+					</a>
+				</div>
 			</div>
+
 		</div>
 
 	</div>
