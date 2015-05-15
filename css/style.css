@@ -94,6 +94,34 @@ html, body, .map-view {
 	background-color: orange;
 }
 
+/* Performer Info */
+
+.info-heading {
+	font-weight: bold;
+	text-align: center;
+}
+
+.info-subheading {
+	font-weight: bold;
+	text-align: center;
+	color:orange;
+}
+
+.videos-list {
+	text-align: center;
+}
+
+.videos {
+	margin: 10px 40px;
+	width: 200px;
+	height: 200px;
+}
+
+.back-btn {
+	display: block;
+	margin: 0 auto;
+}
+
 /*
 .form-control {
 	display:inline-block;
@@ -152,29 +180,7 @@ html, body, .map-view {
 	display: none;
 }
 
-.info-heading {
-	font-weight: bold;
-	text-align: center;
-}
 
-.info-subheading {
-	font-weight: bold;
-	text-align: center;
-	color:orange;
-}
 
-.videos-list {
-	text-align: center;
-}
 
-.videos {
-	margin: 10px 40px;
-	width: 200px;
-	height: 200px;
-}
-
-.back-btn {
-	display: block;
-	margin: 0 auto;
-}
 */
