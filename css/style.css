@@ -29,7 +29,7 @@ html, body, .map-view {
 #map-canvas {
 	height: 100%;
 	width: 100%;
-	position: static;
+	position: absolute;
 }
 
 /* Location */
@@ -120,67 +120,5 @@ html, body, .map-view {
 .back-btn {
 	display: block;
 	margin: 0 auto;
+	position: fixed; top: 10px; left: 5px;
 }
-
-/*
-.form-control {
-	display:inline-block;
-	width: 125px;
-}
-
-#content_header {
-	color: orange;
-}
-
-.list-results {
-	background-color: white;
-	max-width: 350px;
-	position: fixed; right: 0px;
-	z-index: 1;
-
-}
-
-.list-group {
-	height: 350px;
-	overflow-y: scroll;
-	overflow-x: hidden;
-	margin: 0px;
-}
-
-.list-group a{
-	color: black;
-}
-
-.venue {
-	width: 100%;
-}
-
-.filter-btn {
-	width: 49%;
-}
-
-.venue-name {
-	font-size:110%;
-	color: white;
-	display: block;
-	background-color: #666666;
-	cursor:pointer;
-}
-
-.artist-name {
-	margin-left: 40px;
-	margin-top: 0px;
-	margin-bottom: 0px;
-	cursor:pointer;
-}
-
-
-
-.filled {
-	display: none;
-}
-
-
-
-
-*/
