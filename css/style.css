@@ -29,26 +29,41 @@ html, body, .map-view {
 #map-canvas {
 	height: 100%;
 	width: 100%;
-	position: absolute; top:0; left:0;
+	position: static;
 }
 
-/* Location Search */
+@media (min-width: 615px) {
+	.location-input {
+		display: inline-block;
+		position: absolute; top: 10px; left: 50px;
+	}
 
-.location-input {
-	position: relative; top: 10px; left: 40px;
+	.results-info {
+		display: inline-block;
+		position: absolute; top: 10px; right: 50px;
+	}
+
+	.results-button {
+		display: block;
+		margin-left: auto;
+	}
 }
 
+@media (max-width: 614px) {
+	.location-input {
+		display: inline-block;
+		position: absolute; top: 10px; left: 50px;
+	}
 
-/* Results List */ 
-.results-info {
-	position: absolute; top: 10px; right: 50px;
-	display: inline-block;
+	.results-info {
+		display: inline-block;
+		position: absolute; top: 42px; right: 50px;
+	}
 
-}
-
-.results-button {
-	display: block;
-	margin-left: auto;
+	.results-button {
+		display: block;
+		margin-left: auto;
+	}
 }
 
 .apply-button {
@@ -64,6 +79,7 @@ html, body, .map-view {
 	overflow-y: scroll;
 	overflow-x: hidden;
 	height: 300px;
+
 }
 
 /*
