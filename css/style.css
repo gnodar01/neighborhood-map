@@ -77,7 +77,7 @@ html, body, .map-view {
 }
 
 .results-list {
-	overflow-y: scroll;
+	overflow-y: auto;
 	overflow-x: hidden;
 	height: 300px;
 }

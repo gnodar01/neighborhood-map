@@ -119,8 +119,13 @@ function MyViewModel() {
 			currentInfoWindow.close();
 		}
 
-		// Get the value inputted in the filter search, and set to all lower cas letters.
-		var venueFilter = self.venueVal().toLowerCase();
+		// Get the value inputted in the filter search, and set to all lower case letters.
+		if (self.venueVal()) {
+			var venueFilter = self.venueVal().toLowerCase();
+		}
+		else {
+			return null;
+		}
 
 		var events = allEvents, markers = allMarkers;
 
