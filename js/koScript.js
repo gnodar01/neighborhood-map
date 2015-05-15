@@ -113,7 +113,7 @@ function MyViewModel() {
 
 	self.filterVenues = function() {
 		// In case there is another filter, it should be removed before re-filtering.
-		self.removeFilter();
+		self.clearFilter();
 		// Close current info window, if there is one set.
 		if (currentInfoWindow) {
 			currentInfoWindow.close();
@@ -151,7 +151,14 @@ function MyViewModel() {
 		setAllMap(map);
 	}
 
+	// Removes any value set in view.
 	self.removeFilter = function() {
+		self.venueVal(null);
+		self.clearFilter();
+	}
+
+	// Clears out any remnants from the filter.
+	self.clearFilter = function() {
 		self.events(allEvents);
 		self.markers(allMarkers);
 		// Remove all markers before re-populating to avoid doubling up on markers.
