@@ -18,7 +18,7 @@ a:active {
     color: #FF9933;
 }
 
-/* map */
+/* Map */
 
 html, body, .map-view {
 	margin: 0;
@@ -32,38 +32,39 @@ html, body, .map-view {
 	position: static;
 }
 
-@media (min-width: 615px) {
-	.location-input {
-		display: inline-block;
-		position: absolute; top: 10px; left: 50px;
-	}
+/* Location */
 
+.location-input {
+	display: inline-block;
+	position: absolute; top: 10px; left: 50px;
+}
+
+/* Results */
+
+@media (min-width: 615px) {
 	.results-info {
 		display: inline-block;
 		position: absolute; top: 10px; right: 50px;
 	}
-
-	.results-button {
-		display: block;
-		margin-left: auto;
-	}
 }
 
 @media (max-width: 614px) {
-	.location-input {
-		display: inline-block;
-		position: absolute; top: 10px; left: 50px;
-	}
-
 	.results-info {
 		display: inline-block;
 		position: absolute; top: 42px; right: 50px;
 	}
+}
 
-	.results-button {
-		display: block;
-		margin-left: auto;
+@media (max-width: 350px) {
+	.results-info {
+		display: inline-block;
+		position: absolute; top: 70px; right: 50px;
 	}
+}
+
+.results-button {
+	display: block;
+	margin-left: auto;
 }
 
 .apply-button {
@@ -79,7 +80,18 @@ html, body, .map-view {
 	overflow-y: scroll;
 	overflow-x: hidden;
 	height: 300px;
+}
 
+.results-list a {
+	color: black;
+}
+
+.highlight-event {
+	background-color: #FFEBCC;
+}
+
+.highlight-performer {
+	background-color: orange;
 }
 
 /*
@@ -134,13 +146,7 @@ html, body, .map-view {
 	cursor:pointer;
 }
 
-.highlight-event {
-	background-color: #FFEBCC;
-}
 
-.highlight-performer {
-	background-color: orange;
-}
 
 .filled {
 	display: none;
