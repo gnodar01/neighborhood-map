@@ -38,13 +38,18 @@ function MyViewModel() {
 
 	// Cleans out data from previous city search, and runs search on new city.
 	self.cleanSearch = function() {
-		var newCity = self.cityVal();
-		sgCurrentPage = 1;
-		allEvents = [];
-		allMarkers = [];
-		setAllMap(null);
-		self.currentEventIndex(null);
-		codeAddress(newCity);
+		var newCity;
+		if (self.cityVal()) {
+			newCity = self.cityVal();
+			sgCurrentPage = 1;
+			allEvents = [];
+			allMarkers = [];
+			setAllMap(null);
+			self.currentEventIndex(null);
+			codeAddress(newCity);
+		} else {
+			alert("Enter a City");
+		}
 	};
 
 	self.displayResults = function() {
@@ -246,6 +251,7 @@ function MyViewModel() {
 	/* Takes city, geocodes it, gets the lat & lng coords, sets a marker on that location in the map,
 	 and runs the search SeatGeek function on those coords. */
 	var codeAddress = function (city) {
+		self.cityVal(null);
 		geocoder.geocode( {'address': city}, function(results, status) {
 		    if (status === google.maps.GeocoderStatus.OK) {
 		    	var resultsLocation = results[0].geometry.location;
