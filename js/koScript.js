@@ -50,8 +50,7 @@ function MyViewModel() {
 	self.displayResults = function() {
 		if (self.resultsList()) {
 			self.resultsList(false);
-		}
-		else {
+		} else {
 			self.resultsList(true);
 		}	
 	};
@@ -81,8 +80,7 @@ function MyViewModel() {
 		if (currentInfoWindow) {
 			currentInfoWindow.close();
 			currentInfoWindow = marker.eventInfo;
-		}
-		else {
+		} else {
 			currentInfoWindow = marker.eventInfo;
 		}
 		// Open current event's info window.
@@ -123,8 +121,7 @@ function MyViewModel() {
 		// Get the value inputted in the filter search, and set to all lower case letters.
 		if (self.venueVal()) {
 			venueFilter = self.venueVal().toLowerCase();
-		}
-		else {
+		} else {
 			return null;
 		}
 
@@ -261,8 +258,7 @@ function MyViewModel() {
 				 is usually no need to use the others. */
 				map.setCenter(resultsLocation);
 				setCityMarker();
-		    } 
-			else {
+		    } else {
 				alert("Geocode was not successful for the following reason: " + status);
 			}
 
@@ -334,8 +330,7 @@ function MyViewModel() {
 			if (time[0] >= 13) {
 				time[0] -= 12;
 				time[3] = "p.m.";
-			}
-			else {
+			} else {
 				time[3] = "a.m.";
 			}
 
@@ -365,11 +360,9 @@ function MyViewModel() {
 				is set to 3:30 a.m. */
 			if (currentEvent.date_tbd) {
 				eventListing.eventDate = currentDate + " (Date estimated)";
-			}
-			else if (currentEvent.time_tbd) {
+			} else if (currentEvent.time_tbd) {
 				eventListing.eventDate = currentDate + " (Exact time not set)";
-			}
-			else {
+			} else {
 				eventListing.eventDate = currentDate;
 			}
 			
@@ -464,8 +457,7 @@ function MyViewModel() {
 		if (currentInfoWindow) {
 			currentInfoWindow.close();
 			currentInfoWindow = marker.venueInfo;
-		}
-		else {
+		} else {
 			currentInfoWindow = marker.venueInfo;
 		}
 		marker.venueInfo.open(map,marker);

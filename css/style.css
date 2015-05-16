@@ -1,26 +1,28 @@
 /* unvisited link */
 a:link {
-    color: #FF3300;
+    color: #ff3300;
 }
 
 /* visited link */
 a:visited {
-    color: #FF9900;
+    color: #ff9900;
 }
 
 /* mouse over link */
 a:hover {
-    color: #FF6600;
+    color: #ff6600;
 }
 
 /* selected link */
 a:active {
-    color: #FF9933;
+    color: #ff9933;
 }
 
 /* Map */
 
-html, body, .map-view {
+html,
+body,
+.map-view {
 	margin: 0;
 	padding: 0;
 	height: 100%;
@@ -36,7 +38,9 @@ html, body, .map-view {
 
 .location-input {
 	display: inline-block;
-	position: absolute; top: 10px; left: 50px;
+	position: absolute;
+	top: 10px;
+	left: 50px;
 }
 
 /* Results */
@@ -44,21 +48,27 @@ html, body, .map-view {
 @media (min-width: 615px) {
 	.results-info {
 		display: inline-block;
-		position: absolute; top: 10px; right: 50px;
+		position: absolute;
+		top: 10px;
+		right: 50px;
 	}
 }
 
 @media (max-width: 614px) {
 	.results-info {
 		display: inline-block;
-		position: absolute; top: 42px; right: 50px;
+		position: absolute;
+		top: 42px;
+		right: 50px;
 	}
 }
 
 @media (max-width: 350px) {
 	.results-info {
 		display: inline-block;
-		position: absolute; top: 70px; right: 50px;
+		position: absolute;
+		top: 70px;
+		right: 50px;
 	}
 }
 
@@ -73,7 +83,7 @@ html, body, .map-view {
 
 .remove-button {
 	width: 49%;
-	float:right;
+	float: right;
 }
 
 .results-list {
@@ -87,7 +97,7 @@ html, body, .map-view {
 }
 
 .highlight-event {
-	background-color: #FFEBCC;
+	background-color: #ffebcc;
 }
 
 .highlight-performer {
@@ -104,7 +114,7 @@ html, body, .map-view {
 .info-subheading {
 	font-weight: bold;
 	text-align: center;
-	color:orange;
+	color: orange;
 }
 
 .videos-list {
@@ -120,5 +130,7 @@ html, body, .map-view {
 .back-btn {
 	display: block;
 	margin: 0 auto;
-	position: fixed; top: 10px; left: 5px;
+	position: fixed;
+	top: 10px;
+	left: 5px;
 }
