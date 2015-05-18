@@ -21,13 +21,10 @@ gulp.task('lint', function() {
         .pipe(jshint.reporter('default')); // Log lint errors
 });
 
-/* Concatenate all js files, then save them to /dist, then take that file, rename it (concat. file remanes the same),
-	 minify it, and save it alongside the concatinated file */
+/* Concatenate all js files, minify it, and save it in 'dist' folder inside root dir */
 gulp.task('scripts', function(){
 	return gulp.src(['js/*.js', '!js/knockout.js'])
-		.pipe(concat('all.js')) // Concatinated file will be named 'all.js'
-		.pipe(gulp.dest('dist')) // Save to folder named 'dist' in root of directory
-		.pipe(rename('app.min.js')) // Takes concatinated file, makes new one, names it 'app.min.js'
+		.pipe(concat('app.min.js')) // Concatinated file will be named 'all.js'
 		.pipe(uglify()) // Minify new concat file
 		.pipe(gulp.dest('dist')); // Save alongside concat. file in 'dist'
 });
