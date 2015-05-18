@@ -1,73 +1,110 @@
-html, body, .map-list {
-	margin: auto;
+/* unvisited link */
+a:link {
+    color: #ff3300;
+}
+
+/* visited link */
+a:visited {
+    color: #ff9900;
+}
+
+/* mouse over link */
+a:hover {
+    color: #ff6600;
+}
+
+/* selected link */
+a:active {
+    color: #ff9933;
+}
+
+/* Map */
+
+html,
+body,
+.map-view {
+	margin: 0;
+	padding: 0;
 	height: 100%;
-	position: relative;
 }
 
 #map-canvas {
 	height: 100%;
 	width: 100%;
+	position: absolute;
 }
+
+/* Location */
 
 .location-input {
-	position: fixed;
-	left: 100px;
-	right: 50%;
-	z-index: 1;
+	display: inline-block;
+	position: absolute;
+	top: 10px;
+	left: 50px;
 }
 
-.form-control {
-	display:inline-block;
-	width: 125px;
+/* Results */
+
+@media (min-width: 615px) {
+	.results-info {
+		display: inline-block;
+		position: absolute;
+		top: 10px;
+		right: 50px;
+	}
 }
 
-#content_header {
-	color: orange;
+@media (max-width: 614px) {
+	.results-info {
+		display: inline-block;
+		position: absolute;
+		top: 42px;
+		right: 50px;
+	}
 }
 
-.results {
-	height: 100%;
-	width: 350px;
-	position: fixed; right:0; top:0;
-	background-color: white;
-	overflow: auto;
-	z-index: 1;
- }
-
-#venue {
-	width: 100%;
+@media (max-width: 350px) {
+	.results-info {
+		display: inline-block;
+		position: absolute;
+		top: 70px;
+		right: 50px;
+	}
 }
 
-.filter-btn {
+.results-button {
+	display: block;
+	margin-left: auto;
+}
+
+.apply-button {
 	width: 49%;
 }
 
-.venue-name {
-	font-size:110%;
-	color: white;
-	display: block;
-	background-color: #666666;
-	cursor:pointer;
+.remove-button {
+	width: 49%;
+	float: right;
 }
 
-.artist-name {
-	margin-left: 40px;
-	margin-top: 0px;
-	margin-bottom: 0px;
-	cursor:pointer;
+.results-list {
+	overflow-y: auto;
+	overflow-x: hidden;
+	height: 300px;
+}
+
+.results-list a {
+	color: black;
 }
 
 .highlight-event {
-	background-color: #FFEBCC;
+	background-color: #ffebcc;
 }
 
 .highlight-performer {
 	background-color: orange;
 }
 
-.filled {
-	display: none;
-}
+/* Performer Info */
 
 .info-heading {
 	font-weight: bold;
@@ -77,7 +114,7 @@ html, body, .map-list {
 .info-subheading {
 	font-weight: bold;
 	text-align: center;
-	color:orange;
+	color: orange;
 }
 
 .videos-list {
@@ -93,24 +130,7 @@ html, body, .map-list {
 .back-btn {
 	display: block;
 	margin: 0 auto;
-}
-
-/* unvisited link */
-a:link {
-    color: #FF3300;
-}
-
-/* visited link */
-a:visited {
-    color: #FF9900;
-}
-
-/* mouse over link */
-a:hover {
-    color: #FF6600;
-}
-
-/* selected link */
-a:active {
-    color: #FF9933;
+	position: fixed;
+	top: 10px;
+	left: 5px;
 }

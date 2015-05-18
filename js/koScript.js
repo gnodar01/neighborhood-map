@@ -10,6 +10,7 @@ function MyViewModel() {
 	self.markers = ko.observableArray();
 
 	self.resultsInfo = ko.observable(false);
+	self.resultsList = ko.observable(false);
 	self.performerInfo = ko.observable(false);
 	self.currentEventName = ko.observable();
 	self.currentEventDate = ko.observable();
@@ -33,27 +34,40 @@ function MyViewModel() {
 		// Keeps track of what page of results we are currently on.
 		sgCurrentPage++;
 		codeAddress(city);
-	}
+	};
 
 	// Cleans out data from previous city search, and runs search on new city.
 	self.cleanSearch = function() {
-		var newCity = self.cityVal();
-		sgCurrentPage = 1;
-		allEvents = [];
-		allMarkers = [];
-		setAllMap(null);
-		self.currentEventIndex(null);
-		codeAddress(newCity);
-	}
+		var newCity;
+		if (self.cityVal()) {
+			newCity = self.cityVal();
+			sgCurrentPage = 1;
+			allEvents = [];
+			allMarkers = [];
+			setAllMap(null);
+			self.currentEventIndex(null);
+			codeAddress(newCity);
+		} else {
+			alert("Enter a City");
+		}
+	};
+
+	self.displayResults = function() {
+		if (self.resultsList()) {
+			self.resultsList(false);
+		} else {
+			self.resultsList(true);
+		}	
+	};
 
 	self.displayEvent = function() {
 		var eventItem = this;
 
-		var index = this.eventIndex;
+		var index = eventItem.eventIndex;
 		// Set perfomer's location in eventPerformer array within event object.
-		var performerIndex = this.performerIndex
+		var performerIndex = eventItem.performerIndex;
 		// Get performer's unique ID
-		var performerID = this.performerID;
+		var performerID = eventItem.performerID;
 
 		var marker = allMarkers[index];
 		var currentEvent = allEvents[index];
@@ -71,12 +85,11 @@ function MyViewModel() {
 		if (currentInfoWindow) {
 			currentInfoWindow.close();
 			currentInfoWindow = marker.eventInfo;
-		}
-		else {
+		} else {
 			currentInfoWindow = marker.eventInfo;
 		}
 		// Open current event's info window.
-		marker.eventInfo.open(map,marker)
+		marker.eventInfo.open(map,marker);
 		map.setCenter(marker.position);
 
 		self.currentEventDate(currentEvent.eventDate);
@@ -90,7 +103,7 @@ function MyViewModel() {
 
 		// Search and get data from EchoNest API on this artist
 		searchEchoNest(performerID);
-	}
+	};
 
 	// Displays clicked venue name in marker's info window on map
 	self.displayVenue = function() {
@@ -99,16 +112,23 @@ function MyViewModel() {
 		var venueMarker = allMarkers[venueIndex];
 
 		showVenueWindow(venueMarker);
-	}
+	};
 
 	self.filterVenues = function() {
+    var venueFilter;
 		// In case there is another filter, it should be removed before re-filtering.
-		self.removeFilter();
-		// Close current info window.
-		currentInfoWindow.close();
+		self.clearFilter();
+		// Close current info window, if there is one set.
+		if (currentInfoWindow) {
+			currentInfoWindow.close();
+		}
 
-		// Get the value inputted in the filter search, and set to all lower cas letters.
-		var venueFilter = self.venueVal().toLowerCase();
+		// Get the value inputted in the filter search, and set to all lower case letters.
+		if (self.venueVal()) {
+			venueFilter = self.venueVal().toLowerCase();
+		} else {
+			return null;
+		}
 
 		var events = allEvents, markers = allMarkers;
 
@@ -132,22 +152,27 @@ function MyViewModel() {
 		}
 		// Set all markers in observable to the map.
 		setAllMap(map);
-	}
+	};
 
+	// Removes any value set in view.
 	self.removeFilter = function() {
+		self.venueVal(null);
+		self.clearFilter();
+	};
+
+	// Clears out any remnants from the filter.
+	self.clearFilter = function() {
 		self.events(allEvents);
 		self.markers(allMarkers);
 		// Remove all markers before re-populating to avoid doubling up on markers.
 		setAllMap(null);
 		setAllMap(map);
-	}
+	};
 
 	self.openPerformerInfo = function() {
 		// When performerInfo is true, the css changes to performer info view.
 		self.performerInfo(true);
-		var donkey = self.currentPerformerURLs();
-		console.log(donkey)
-	}
+	};
 
 	self.closePerformerInfo = function() {
 		// When performerInfo is false, the css changes to map view
@@ -158,7 +183,7 @@ function MyViewModel() {
 		setCityMarker();
 		// Re-sets all event markers to map
 		setAllMap(map);
-	}
+	};
 
 	/*-------------------PRIVATE-------------------*/
 
@@ -179,8 +204,8 @@ function MyViewModel() {
 		$.ajaxSetup({
 			error: function (xhr, status, error) {
 				console.log(xhr);
-				alert( "Something went wrong, and it's entirely your fault\n"
-				+ "Status: " + xhr.status + " - " + status + " " + error );
+				alert( "Something went wrong, and it's entirely your fault" +
+              "\n" + "Status: " + xhr.status + " - " + status + " " + error );
 			}
 		});
 	});
@@ -205,7 +230,7 @@ function MyViewModel() {
 				style: google.maps.ZoomControlStyle.SMALL
 			},
 			panControl: false
-		}
+		};
 		map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
 		// Keeps track of map resizes, and sets new center based on new map size
@@ -221,14 +246,15 @@ function MyViewModel() {
 		google.maps.event.addDomListener(window, "resize", function() {
 			newCenter();
 		});
-	}
+	};
 
 	/* Takes city, geocodes it, gets the lat & lng coords, sets a marker on that location in the map,
 	 and runs the search SeatGeek function on those coords. */
 	var codeAddress = function (city) {
+		self.cityVal(null);
 		geocoder.geocode( {'address': city}, function(results, status) {
 		    if (status === google.maps.GeocoderStatus.OK) {
-		    	resultsLocation = results[0].geometry.location 
+		    	var resultsLocation = results[0].geometry.location;
 		    	cityLat = resultsLocation.lat();
 		    	cityLng = resultsLocation.lng();
 
@@ -238,15 +264,14 @@ function MyViewModel() {
 				 is usually no need to use the others. */
 				map.setCenter(resultsLocation);
 				setCityMarker();
-		    } 
-			else {
+		    } else {
 				alert("Geocode was not successful for the following reason: " + status);
 			}
 
 			// Run the Seat Geek API and get data of artists/music events in current city
 			searchSeatGeek(cityLat,cityLng);
 		});
-	}
+	};
 
 	// Sets marker on current city.
 	var setCityMarker = function() {
@@ -263,7 +288,7 @@ function MyViewModel() {
 			position: latLng,
 			icon: "images/blue-dot.png"
 		});
-	}
+	};
 
 	// Runs the SeatGeek api, and returns a list of 25 events near the city the user inputted (after geocoding).
 	var searchSeatGeek = function(lat,lng) {
@@ -283,7 +308,7 @@ function MyViewModel() {
 			lat: lat,
 			lon: lng,
 			page: sgCurrentPage
-		}
+		};
 
 		$.ajax({
 			url: "http://api.seatgeek.com/2/events",
@@ -292,41 +317,42 @@ function MyViewModel() {
 			traditional: true,
 			success: getResults
 		});
-	}
+	};
 
 	/* Parse the data response from the API call, and form an array of event objects
 		with relevant data, which will be displayed on the google map. */
 	var parseSGResults = function(data) {
+		var parseDate = function(dateToParse) {
+			// Split inputted date into two arrays; 0: Date, 1: Time
+			var dateTime = dateToParse.split('T');
+			// Split date into three arrays; 0: yyyy, 1: mm, 2: dd
+			var date = dateTime[0].split('-');
+			// Split time into three arrays; 0: hh, 1: mm, 2: ss
+			var time = dateTime[1].split(':');
+
+			// Translate the hour string into integer (so that it rids 0s in front of single digit times e.g. 3:00 vs 03:00).
+			time[0] = parseInt(time[0]);
+			// Translate from 24 hour time to 12 hour time.
+			if (time[0] >= 13) {
+				time[0] -= 12;
+				time[3] = "p.m.";
+			} else {
+				time[3] = "a.m.";
+			}
+
+			var dateString = date[1] + "/" + date[2] + "/" + date[0];
+			var timeString = time[0] + ":" + time[1] + " " + time[3];
+			var parsedDateString = dateString + " - " + timeString;
+
+			return parsedDateString;
+		};
+
 		for (var i = 0, numEvents = data.events.length; i < numEvents; i++) {
 			var currentEvent = data.events[i], currentVenue = currentEvent.venue;
 
 			// IIFE which takes in the ugly standardized date format returned by SeatGeek, and makes it easily readable.
 			// SeatGeeks returned date format is: yyyy-mm-ddThh:mm:ss
-			var currentDate = (function(dateToParse) {
-				// Split inputted date into two arrays; 0: Date, 1: Time
-				var dateTime = dateToParse.split('T');
-				// Split date into three arrays; 0: yyyy, 1: mm, 2: dd
-				var date = dateTime[0].split('-');
-				// Split time into three arrays; 0: hh, 1: mm, 2: ss
-				var time = dateTime[1].split(':');
-
-				// Translate the hour string into integer (so that it rids 0s in front of single digit times e.g. 3:00 vs 03:00).
-				time[0] = parseInt(time[0]);
-				// Translate from 24 hour time to 12 hour time.
-				if (time[0] >= 13) {
-					time[0] -= 12;
-					time[3] = "p.m.";
-				}
-				else {
-					time[3] = "a.m.";
-				}
-
-				var dateString = date[1] + "/" + date[2] + "/" + date[0];
-				var timeString = time[0] + ":" + time[1] + " " + time[3];
-				var parsedDateString = dateString + " - " + timeString;
-
-				return parsedDateString;
-			}(currentEvent.datetime_local));
+			var currentDate = parseDate(currentEvent.datetime_local);
 
 			var eventListing = {
 				eventTitle: currentEvent.title,
@@ -340,11 +366,9 @@ function MyViewModel() {
 				is set to 3:30 a.m. */
 			if (currentEvent.date_tbd) {
 				eventListing.eventDate = currentDate + " (Date estimated)";
-			}
-			else if (currentEvent.time_tbd) {
+			} else if (currentEvent.time_tbd) {
 				eventListing.eventDate = currentDate + " (Exact time not set)";
-			}
-			else {
+			} else {
 				eventListing.eventDate = currentDate;
 			}
 			
@@ -370,7 +394,7 @@ function MyViewModel() {
 				address: currentVenue.address + ", " + currentVenue.display_location + ", " + currentVenue.postal_code,
 				lat: currentVenue.location.lat,
 				lng: currentVenue.location.lon,
-			}
+			};
 			// Push to all events array which holds each event listing returned from SeatGeek.
 			allEvents.push(eventListing);
 		}
@@ -379,11 +403,19 @@ function MyViewModel() {
 		self.resultsInfo(true);
 		// Place marker on each event's location with performer information.
 		mapSGResults(allEvents);
-	}
+	};
 
 	// Make marker and corresponding info window for each event location.
 	var mapSGResults = function(eventData) {
 		var eventMarker, eventLat, eventLng, eventLatLng;
+
+		// Event listner on marker. When clicked, venue information will be loaded.
+		var addClickListener = function(marker) {
+			google.maps.event.addListener(marker, 'click', function() {
+				var currentMarker = this;
+				showVenueWindow(currentMarker);
+			});
+		};
 
 		// All events are passed in, so if on second page of results, it need to start where new page's events begin
 		for (var i = 0 + (50 * sgCurrentPage - 50), eventDataLen = eventData.length; i < eventDataLen; i++) {
@@ -414,20 +446,16 @@ function MyViewModel() {
 			eventMarker.venueInfo = new google.maps.InfoWindow({
 				content: "<div id='content'>" +
 				"<h1 id='content_header'>" + eventData[i].eventVenue.name + "</h1>"
-			})
-
-			// Event listner on marker. When clicked, venue information will be loaded
-			google.maps.event.addListener(eventMarker, 'click', function() {
-				var currentMarker = this;
-				showVenueWindow(currentMarker);
 			});
+
+			addClickListener(eventMarker);
 
 			// Push to array of all markers.
 			allMarkers.push(eventMarker);
 		}
 		// Set to observable array for filtering.
 		self.markers(allMarkers);
-	}
+	};
 
 	// Displays venue name in info window.
 	var showVenueWindow = function(marker) {
@@ -435,20 +463,19 @@ function MyViewModel() {
 		if (currentInfoWindow) {
 			currentInfoWindow.close();
 			currentInfoWindow = marker.venueInfo;
-		}
-		else {
+		} else {
 			currentInfoWindow = marker.venueInfo;
 		}
-		marker.venueInfo.open(map,marker)
+		marker.venueInfo.open(map,marker);
 		map.setCenter(marker.position);
-	}
+	};
 
 	// Sets all markers in view to map
 	var setAllMap = function(map) {
 		for (var i = 0; i < self.markers().length; i++) {
 			self.markers()[i].setMap(map);
 		}
-	}
+	};
 
 	var searchEchoNest = function(enID) {
 		var enKey = "2QHXFMFAW2PDSCYKW";
@@ -460,7 +487,7 @@ function MyViewModel() {
 			id: performerID,
 			format: 'json',
 			bucket: ["urls","video","genre"]
-		}
+		};
 
 		$.ajax({
 			url: enSearchQuery,
@@ -468,8 +495,8 @@ function MyViewModel() {
 			success: parseENResults,
 			dataType: 'json',
 			traditional: true
-		})
-	}
+		});
+	};
 
 	var parseENResults = function (enInfo) {
 		// Empty observables in case there is any information that cannot be overwritten by the new artist's info.
@@ -488,7 +515,7 @@ function MyViewModel() {
 			self.currentPerformerGenres(artistGenres);
 			self.currentPerformerVideos(artistVideos);
 		}
-	}
+	};
 
 	google.maps.event.addDomListener(window, 'load', initialize);
 }

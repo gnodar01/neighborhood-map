@@ -1,5 +1,10 @@
 # Music Events Near You
-## Running the App
+## How to run
+1. Click Download ZIP
+2. Open 'index.html' in your browser of choice
+3. That's it!
+
+## Using the App
 1. Type in your City or Address and press "Show Me The Music!"
 * The City and Map are by default set to Orlando. It's where I live, so I'd like it to be the default when I share with friends.
 - When "Show Me The Music!" is clicked, new buttons, a filter bar, and a list of music events will appear. Markers will also be placed on the map showing where each event venue is located.
