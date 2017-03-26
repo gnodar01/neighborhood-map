@@ -117,14 +117,12 @@ body,
 	color: orange;
 }
 
-.videos-list {
-	text-align: center;
-}
 
-.videos {
+.images {
 	margin: 10px 40px;
-	width: 200px;
-	height: 200px;
+	display: block;
+	max-width: 750px;
+	margin: 0 auto;
 }
 
 .back-btn {
