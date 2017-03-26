@@ -30,7 +30,9 @@ An app that pulls local music events nearby from SeatGeek and displays them on a
 
 ### APIs
 1. [SeatGeek API](http://platform.seatgeek.com/)
+
 ~~2. [EchoNest API](http://developer.echonest.com/docs/v4)~~ (deprecated API)
+
 2. [Spotify API](https://developer.spotify.com/web-api)
 3. [Google Map Javascript API](https://developers.google.com/maps/documentation/javascript/)
 
