@@ -1,4 +1,6 @@
 # Music Events Near You
+An app that pulls local music events nearby from SeatGeek and displays them on a Google Map. Clicking on artist will show artist info with data pulled from Spotify.
+
 ## How to run
 1. Click Download ZIP
 2. Open 'index.html' in your browser of choice
@@ -28,7 +30,8 @@
 
 ### APIs
 1. [SeatGeek API](http://platform.seatgeek.com/)
-2. [EchoNest API](http://developer.echonest.com/docs/v4)
+~~2. [EchoNest API](http://developer.echonest.com/docs/v4)~~ (deprecated API)
+2. [Spotify API](https://developer.spotify.com/web-api)
 3. [Google Map Javascript API](https://developers.google.com/maps/documentation/javascript/)
 
 ### Libraries/Frameworks
